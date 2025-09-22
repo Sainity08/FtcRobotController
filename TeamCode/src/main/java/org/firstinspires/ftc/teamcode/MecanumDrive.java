@@ -37,22 +37,38 @@ public class MecanumDrive {
 
     public void drive(double power, double theta, double turn) {
 
-        sin = Math.sin(theta - Math.PI/4);
-        cos = Math.cos(theta - Math.PI/4);
-        max = Math.max(Math.abs(sin),Math.abs(cos));
-        speed = 0.75;
-        newPower = power * speed;
+        double sin = Math.sin(theta - Math.PI/4);
+        double cos = Math.cos(theta - Math.PI/4);
+        double max = Math.max(Math.abs(sin),Math.abs(cos));
+        double speed = 0.75;
+        double newPower = power * speed;
 
-        leftFront = newPower * cos/max;
-        rightFront = newPower * sin/max;
-        leftRear = newPower * sin/max;
-        rightRear = newPower * cos/max;
+        double leftFront = newPower * cos/max;
+        double rightFront = newPower * sin/max;
+        double leftRear = newPower * sin/max;
+        double rightRear = newPower * cos/max;
 
-        If ((power + Math.abs(turn))>1){
+        if ((power + Math.abs(turn))>1) {
             leftFront /= newPower + Math.abs(turn);
             rightFront /= newPower + Math.abs(turn);
             leftRear /= newPower + Math.abs(turn);
             rightRear /= newPower + Math.abs(turn);
         }
+    }
+
+    public void driveFieldRelative(double y, double x, double turn){
+        double theta = Math.atan2(y,x);
+        double r = Math.hypot(x,y);
+
+        theta = AngleUnit.normalizeRadians(theta - imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
+        this.drive(r,theta,turn);
+    }
+
+    public void driveRobotRelative(double y, double x, double turn){
+        double theta = Math.atan2(y,x);
+        double r = Math.hypot(x,y);
+
+        this.drive(r,theta,turn);
     }
 }
