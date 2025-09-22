@@ -40,20 +40,25 @@ public class MecanumDrive {
         double sin = Math.sin(theta - Math.PI/4);
         double cos = Math.cos(theta - Math.PI/4);
         double max = Math.max(Math.abs(sin),Math.abs(cos));
-        double speed = 0.75;
+        double speed = 1.0;
         double newPower = power * speed;
 
-        double leftFront = newPower * cos/max;
-        double rightFront = newPower * sin/max;
-        double leftRear = newPower * sin/max;
-        double rightRear = newPower * cos/max;
+        double leftFront = newPower * cos/max + turn;
+        double rightFront = newPower * sin/max - turn;
+        double leftRear = newPower * sin/max + turn;
+        double rightRear = newPower * cos/max - turn;
 
-        if ((power + Math.abs(turn))>1) {
+        if ((newPower + Math.abs(turn))>1) {
             leftFront /= newPower + Math.abs(turn);
             rightFront /= newPower + Math.abs(turn);
             leftRear /= newPower + Math.abs(turn);
             rightRear /= newPower + Math.abs(turn);
         }
+
+        frontLeftMotor.setPower(leftFront);
+        frontRightMotor.setPower(rightFront);
+        backRightMotor.setPower(rightRear);
+        backLeftMotor.setPower(leftRear);
     }
 
     public void driveFieldRelative(double y, double x, double turn){
