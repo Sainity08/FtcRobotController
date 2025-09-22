@@ -44,8 +44,6 @@ public class MecanumDrive {
         double maxPower = 1.0;
         double maxSpeed = 1.0;
 
-        //mecanum drive is goated
-
         maxPower = Math.max(maxPower, Math.abs(frontLeftPower));
         maxPower = Math.max(maxPower, Math.abs(backLeftPower));
         maxPower = Math.max(maxPower, Math.abs(frontRightPower));
