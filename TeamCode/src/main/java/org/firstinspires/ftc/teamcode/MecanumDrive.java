@@ -29,8 +29,8 @@ public class MecanumDrive {
         imu = hwMap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD);
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
 
         imu.initialize(new IMU.Parameters(RevOrientation));
     }
@@ -40,19 +40,17 @@ public class MecanumDrive {
         double sin = Math.sin(theta - Math.PI/4);
         double cos = Math.cos(theta - Math.PI/4);
         double max = Math.max(Math.abs(sin),Math.abs(cos));
-        double speed = 1.0;
-        double newPower = power * speed;
 
-        double leftFront = newPower * cos/max + turn;
-        double rightFront = newPower * sin/max - turn;
-        double leftRear = newPower * sin/max + turn;
-        double rightRear = newPower * cos/max - turn;
+        double leftFront = power * cos/max + turn;
+        double rightFront = power * sin/max - turn;
+        double leftRear = power * sin/max + turn;
+        double rightRear = power * cos/max - turn;
 
-        if ((newPower + Math.abs(turn))>1) {
-            leftFront /= newPower + Math.abs(turn);
-            rightFront /= newPower + Math.abs(turn);
-            leftRear /= newPower + Math.abs(turn);
-            rightRear /= newPower + Math.abs(turn);
+        if ((power + Math.abs(turn)) > 1) {
+            leftFront /= power + Math.abs(turn);
+            rightFront /= power + Math.abs(turn);
+            leftRear /= power + Math.abs(turn);
+            rightRear /= power + Math.abs(turn);
         }
 
         frontLeftMotor.setPower(leftFront);
