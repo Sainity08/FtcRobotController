@@ -2,14 +2,19 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
 public class Flywheel {
+    private static DcMotor FlywheelMotor;
 
-    private DcMotor Flywheel;
+    public static void init(HardwareMap hwMap) {
+        FlywheelMotor = hwMap.get(DcMotor.class, "flywheel");
+        FlywheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-    public void init(HardwareMap hwMap) {
-        Flywheel = hwMap.get(DcMotor.class, "flywheel");
-        Flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
+    }
+    public void spin(boolean input) {
+        if (input) {
+            FlywheelMotor.setPower(1);
+        }
     }
 }
