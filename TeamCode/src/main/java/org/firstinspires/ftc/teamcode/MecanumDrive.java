@@ -13,10 +13,10 @@ public class MecanumDrive {
     private DcMotor frontLeftMotor,backLeftMotor,frontRightMotor,backRightMotor;
     private IMU imu;
     public void init(HardwareMap hwMap) {
-        frontLeftMotor = hwMap.get(DcMotor.class, "motor1");
-        backLeftMotor = hwMap.get(DcMotor.class, "motor3");
-        frontRightMotor = hwMap.get(DcMotor.class, "motor0");
-        backRightMotor = hwMap.get(DcMotor.class, "motor2");
+        frontLeftMotor = hwMap.get(DcMotor.class, "motor2");
+        backLeftMotor = hwMap.get(DcMotor.class, "motor0");
+        frontRightMotor = hwMap.get(DcMotor.class, "motor3");
+        backRightMotor = hwMap.get(DcMotor.class, "motor1");
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -46,7 +46,7 @@ public class MecanumDrive {
         double leftRear = power * sin/max + turn;
         double rightRear = power * cos/max - turn;
 
-        if ((power + Math.abs(turn)) > 1) {
+        if ((power + Math.abs(turn)) > 1){
             leftFront /= power + Math.abs(turn);
             rightFront /= power + Math.abs(turn);
             leftRear /= power + Math.abs(turn);
