@@ -21,7 +21,7 @@ public class MecanumFieldOrientatedOpMode extends OpMode {
         double x = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x;
         boolean input1 = gamepad1.a;
-        boolean input2 = gamepad1.b;
+        boolean input2 = gamepad1.x;
 
         drive.driveFieldRelative(y,x,turn);
         wheel.spin(input1, input2);

@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class MecanumDriveFlywheelServo extends OpMode {
     MecanumDrive drive = new MecanumDrive();
-    FlywheelServo wheel = new FlywheelServo();
+    Flywheel wheel = new Flywheel();
     private CRServo leftServo;
     private CRServo rightServo;
     private final ElapsedTime timer = new ElapsedTime();
@@ -22,7 +21,7 @@ public class MecanumDriveFlywheelServo extends OpMode {
     @Override
     public void init() {
         drive.init(hardwareMap);
-        FlywheelServo.init(hardwareMap);
+        Flywheel.init(hardwareMap);
         leftServo = hardwareMap.get(CRServo.class, "leftServo");
         rightServo = hardwareMap.get(CRServo.class, "rightServo");
         rightServo.setDirection(CRServo.Direction.REVERSE);
