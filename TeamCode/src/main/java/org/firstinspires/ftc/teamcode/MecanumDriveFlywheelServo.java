@@ -8,14 +8,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp
 public class MecanumDriveFlywheelServo extends OpMode {
     MecanumDrive drive = new MecanumDrive();
-    FlywheelServo wheel = new FlywheelServo();
+    Flywheel wheel = new Flywheel();
+    private static CRServo leftServo;
+    private static CRServo rightServo;
+    private final ElapsedTime timer = new ElapsedTime();
+    private boolean buttonPressed = false;
+    private boolean movementStarted = false;
+    private boolean movementCompleted = false;
 
 
 
     @Override
     public void init() {
         drive.init(hardwareMap);
-        FlywheelServo.init(hardwareMap);
+        Flywheel.init(hardwareMap);
+        leftServo = hardwareMap.get(CRServo.class, "leftServo");
+        rightServo = hardwareMap.get(CRServo.class, "rightServo");
+        rightServo.setDirection(CRServo.Direction.REVERSE);
     }
 
     @Override
@@ -25,10 +34,28 @@ public class MecanumDriveFlywheelServo extends OpMode {
         double turn = gamepad1.right_stick_x;
         boolean input1 = gamepad1.a;
         boolean input2 = gamepad1.x;
-        boolean input3 = gamepad1.b;
+
+        if (gamepad1.b && !buttonPressed) {
+            buttonPressed = true;
+            timer.reset();
+            movementStarted = true;
+            movementCompleted = false;
+        }
+
+        if (movementStarted && !movementCompleted) {
+            if (timer.seconds() < 1.0) { //change value its in (sec)
+                leftServo.setPower(1.0);
+                rightServo.setPower(1.0);
+            } else {
+                leftServo.setPower(0.0);
+                rightServo.setPower(0.0);
+                movementCompleted = true;
+                movementStarted = false;
+            }
+        }
 
         drive.driveFieldRelative(y, x, turn);
-        wheel.spin(input1,input2,input3);
+        wheel.spin(input1,input2);
 
     }
 }
