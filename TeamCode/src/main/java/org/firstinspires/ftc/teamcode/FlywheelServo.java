@@ -25,7 +25,7 @@ public class FlywheelServo {
     }
     public void spin(boolean input1, boolean input2, boolean input3) {
         if (input1) {
-            FlywheelMotor.setPower(1);
+            FlywheelMotor.setPower(0.5);
         }
         if (input2) {
             FlywheelMotor.setPower(0);

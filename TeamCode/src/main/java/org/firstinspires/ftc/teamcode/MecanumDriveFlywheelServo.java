@@ -11,7 +11,7 @@ public class MecanumDriveFlywheelServo extends OpMode {
     @Override
     public void init() {
         drive.init(hardwareMap);
-        Flywheel.init(hardwareMap);
+        FlywheelServo.init(hardwareMap);
     }
 
     @Override
