@@ -25,7 +25,7 @@ public class FlywheelServo {
     }
     public void spin(boolean input1, boolean input2, boolean input3) {
         if (input1) {
-            FlywheelMotor.setPower(0.5);
+            FlywheelMotor.setPower(0.65);
         }
         if (input2) {
             FlywheelMotor.setPower(0);
@@ -38,7 +38,7 @@ public class FlywheelServo {
         }
 
         if (movementStarted && !movementCompleted) {
-            if (timer.seconds() < 1.0) { //change value its in (sec)
+            if (timer.seconds() < 0.25) { //change value its in (sec)
                 leftServo.setPower(1.0);
                 rightServo.setPower(1.0);
             } else {
