@@ -13,6 +13,7 @@ public class Flywheel {
 
     }
     public void spin(boolean input1, boolean input2) {
+
         if (input1) {
             FlywheelMotor.setPower(1);
         }

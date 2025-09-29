@@ -14,6 +14,8 @@ public class FlywheelServo {
     private boolean buttonPressed = false;
     private boolean movementStarted = false;
     private boolean movementCompleted = false;
+    boolean motorRunning = false;
+    boolean lastButtonState = false;
 
     public static void init(HardwareMap hwMap) {
         FlywheelMotor = hwMap.get(DcMotor.class, "flywheel");
@@ -27,10 +29,10 @@ public class FlywheelServo {
         if (input1) {
             FlywheelMotor.setPower(0.65);
         }
-        if (input2) {
+        if (input3) {
             FlywheelMotor.setPower(0);
         }
-        if (input3 && !buttonPressed) {
+        if (input2 && !buttonPressed) {
             buttonPressed = true;
             timer.reset();
             movementStarted = true;
@@ -38,7 +40,35 @@ public class FlywheelServo {
         }
 
         if (movementStarted && !movementCompleted) {
-            if (timer.seconds() < 0.25) { //change value its in (sec)
+            if (timer.seconds() < 0.25) { //change value in (sec)
+                leftServo.setPower(1.0);
+                rightServo.setPower(1.0);
+            } else {
+                leftServo.setPower(0.0);
+                rightServo.setPower(0.0);
+                movementCompleted = true;
+                movementStarted = false;
+                buttonPressed = false;
+            }
+        }
+    }
+    public void doubleA(boolean input1, boolean input2) {
+
+        if (input1 && !lastButtonState) {
+            motorRunning = !motorRunning;
+        }
+        FlywheelMotor.setPower(motorRunning ? 0.65 : 0.0);
+        lastButtonState = input1;
+
+        if (input2 && !buttonPressed) {
+            buttonPressed = true;
+            timer.reset();
+            movementStarted = true;
+            movementCompleted = false;
+        }
+
+        if (movementStarted && !movementCompleted) {
+            if (timer.seconds() < 0.25) { //change value in (sec)
                 leftServo.setPower(1.0);
                 rightServo.setPower(1.0);
             } else {
