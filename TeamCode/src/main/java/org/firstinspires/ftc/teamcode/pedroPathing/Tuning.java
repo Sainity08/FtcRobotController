@@ -24,6 +24,8 @@ import com.pedropathing.util.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.MecanumOpMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ import java.util.List;
  */
 @Configurable
 @TeleOp(name = "Tuning", group = "Pedro Pathing")
-public class Tuning extends SelectableOpMode {
+public class Tuning extends MecanumOpMode {
     public static Follower follower;
 
     @IgnoreConfigurable
@@ -48,12 +50,13 @@ public class Tuning extends SelectableOpMode {
     static ArrayList<String> changes = new ArrayList<>();
 
     public Tuning() {
-        super("Select a Tuning OpMode", s -> {
+        super("Localization", s -> {
             s.folder("Localization", l -> {
                 l.add("Localization Test", LocalizationTest::new);
                 l.add("Forward Tuner", ForwardTuner::new);
                 l.add("Lateral Tuner", LateralTuner::new);
                 l.add("Turn Tuner", TurnTuner::new);
+
             });
             s.folder("Automatic", a -> {
                 a.add("Forward Velocity Tuner", ForwardVelocityTuner::new);
