@@ -21,7 +21,7 @@ public class FlywheelServo {
         FlywheelMotor = hwMap.get(DcMotor.class, "flywheel");
         leftServo = hwMap.get(CRServo.class, "leftServo");
         rightServo = hwMap.get(CRServo.class, "rightServo");
-        FlywheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FlywheelMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
         rightServo.setDirection(CRServo.Direction.REVERSE);
 
     }

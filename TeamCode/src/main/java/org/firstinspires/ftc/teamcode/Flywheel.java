@@ -9,7 +9,7 @@ public class Flywheel {
 
     public static void init(HardwareMap hwMap) {
         FlywheelMotor = hwMap.get(DcMotor.class, "flywheel");
-        FlywheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FlywheelMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
 
     }
     public void spin(boolean input1, boolean input2) {
