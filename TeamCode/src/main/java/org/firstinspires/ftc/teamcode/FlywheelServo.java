@@ -21,7 +21,7 @@ public class FlywheelServo {
         FlywheelMotor = hwMap.get(DcMotor.class, "flywheel");
         leftServo = hwMap.get(CRServo.class, "leftServo");
         rightServo = hwMap.get(CRServo.class, "rightServo");
-        FlywheelMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+        FlywheelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightServo.setDirection(CRServo.Direction.REVERSE);
 
     }
@@ -57,7 +57,7 @@ public class FlywheelServo {
         if (input1 && !lastButtonState) {
             motorRunning = !motorRunning;
         }
-        FlywheelMotor.setPower(motorRunning ? 0.65 : 0.0);
+        FlywheelMotor.setPower(motorRunning ? 0.50 : 0.0);
         lastButtonState = input1;
 
         if (input2 && !buttonPressed) {
@@ -68,7 +68,7 @@ public class FlywheelServo {
         }
 
         if (movementStarted && !movementCompleted) {
-            if (timer.seconds() < 0.25) { //change value in (sec)
+            if (timer.seconds() < 0.30) { //change value in (sec)
                 leftServo.setPower(1.0);
                 rightServo.setPower(1.0);
             } else {
