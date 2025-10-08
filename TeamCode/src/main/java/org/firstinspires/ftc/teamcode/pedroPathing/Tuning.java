@@ -142,7 +142,7 @@ class LocalizationTest extends OpMode {
     public void start() {
         follower.startTeleopDrive();
         follower.update();
-        follower.setStartingPose(new Pose(0,0,180));
+        follower.setStartingPose(new Pose(0.0,0.0,0));
     }
 
     /**
@@ -860,7 +860,7 @@ class HeadingTuner extends OpMode {
  * @version 1.0, 3/12/2024
  */
 class DriveTuner extends OpMode {
-    public static double DISTANCE = 40;
+    public static double DISTANCE = 30;
     private boolean forward = true;
 
     private PathChain forwards;
