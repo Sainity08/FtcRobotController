@@ -57,7 +57,7 @@ public class FlywheelServo {
         if (input1 && !lastButtonState) {
             motorRunning = !motorRunning;
         }
-        FlywheelMotor.setPower(motorRunning ? 0.50 : 0.0);
+        FlywheelMotor.setPower(motorRunning ? 0.475 : 0.0);
         lastButtonState = input1;
 
         if (input2 && !buttonPressed) {
