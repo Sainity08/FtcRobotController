@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.PID;
 
 public class FlywheelPID {
 
-    private double kP, kI, kD;
+    private double kP, kI, kD, kF;
     private double integral = 0;
     private double lastError = 0;
 
