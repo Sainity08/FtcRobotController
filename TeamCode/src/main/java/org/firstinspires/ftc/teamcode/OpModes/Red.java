@@ -129,7 +129,7 @@ public class Red extends OpMode {
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
                     + 147 * distance
-                    + 121;
+                    + 1214;
             rpm = Math.max(3000, Math.min(rpm, 5000));
             targetRPM = rpm;
         }
@@ -149,7 +149,6 @@ public class Red extends OpMode {
         if (autoAim && hasTarget) {
             double kP = 0.01;
             turn = kP * tx;
-
             if (Math.abs(tx) < 1.0) {
                 turn = 0;
             }
