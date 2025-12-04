@@ -65,7 +65,7 @@ public class Red extends OpMode {
 
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        pid = new FlywheelPID(0.015, 0.0001, 0.005);
+        pid = new FlywheelPID(0.015, 0.0005, 0.005);
 
         previousPid = 0.0;
         previousPower = 0.0;
@@ -138,7 +138,6 @@ public class Red extends OpMode {
         telemetry.addData("Ty", llResult.getTy());
         telemetry.addData("Distance", distance);
 
-
         if (gamepad1.x && !yWasPressed) {
             autoAim = !autoAim;
         }
@@ -168,10 +167,7 @@ public class Red extends OpMode {
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();
         double avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
-
         double pidOut = pid.calculate(targetRPM, avgRPM, 0.02);
-
-
         double power;
         if (!flywheelOn) {
             power = 0;
