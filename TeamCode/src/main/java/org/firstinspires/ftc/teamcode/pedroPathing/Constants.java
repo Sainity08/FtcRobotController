@@ -7,7 +7,6 @@ import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Constants {
-    {
         public static FollowerConstants followerConstants = new FollowerConstants();
 
         public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
@@ -16,6 +15,5 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .build();
-    }
     }
 }
