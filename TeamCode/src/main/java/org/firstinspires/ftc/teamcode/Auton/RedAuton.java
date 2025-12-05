@@ -40,10 +40,12 @@ public class RedAuton extends OpMode {
     public enum PathState {
         STARTPOSE_SHOOT1POSE,
         SHOOT1,
-        SHOOT1POSE_INTAKE1POSE,
+        INTAKE1ALIGN,
+        INTAKE1ALIGN_INTAKE1POSE,
         INTAKE1POSE_SHOOT2POSE,
         SHOOT2,
-        SHOOT2POSE_INTAKE2POSE,
+        INTAKE2ALIGN,
+        INTAKE2ALIGN_INTAKE2POSE,
         INTAKE2POSE_SHOOT3POSE,
         SHOOT3,
         MOVE_OFF_LINE,
@@ -122,8 +124,10 @@ public class RedAuton extends OpMode {
         switch (pathState) {
             case STARTPOSE_SHOOT1POSE:
                 follower.followPath(Turn, true);
-                pathState = PathState.SHOOT1;
-                break;
+                if (!follower.isBusy()) {
+                    pathState = PathState.SHOOT1;
+                    break;
+                }
             case SHOOT1:
                 if (!follower.isBusy()) {
                     ShooterTimer.reset();
@@ -131,51 +135,70 @@ public class RedAuton extends OpMode {
                         flywheelOn = true;
                     } else {
                         flywheelOn = false;
-                        pathState = PathState.SHOOT1POSE_INTAKE1POSE;
+                        pathState = PathState.INTAKE1ALIGN;
                         break;
                     }
                 }
-//            case SHOOT1POSE_INTAKE1POSE:
-//                follower.followPath(Path2, false);
-//                follower.followPath(Path3, true);
-//                pathState = PathState.INTAKE1POSE_SHOOT2POSE;
-//                break;
-//            case INTAKE1POSE_SHOOT2POSE:
-//                follower.followPath(Path4, true);
-//                pathState = PathState.SHOOT2;
-//                break;
-//            case SHOOT2:
-//                if (!follower.isBusy()) {
-//                    ShooterTimer.reset();
-//                    if (ShooterTimer.seconds() < 4) {
-//                        flywheelOn = true;
-//                    } else {
-//                        flywheelOn = false;
-//                        pathState = PathState.SHOOT2POSE_INTAKE2POSE;
-//                    }
-//                }
-//                break;
-//            case SHOOT2POSE_INTAKE2POSE:
-//                follower.followPath(Path5, false);
-//                follower.followPath(Path6, true);
-//                pathState = PathState.INTAKE2POSE_SHOOT3POSE;
-//                break;
-//            case INTAKE2POSE_SHOOT3POSE:
-//                follower.followPath(Path7, true);
-//                pathState = PathState.SHOOT3;
-//                break;
-//            case SHOOT3:
-//                if (!follower.isBusy()) {
-//                    ShooterTimer.reset();
-//                    if (ShooterTimer.seconds() < 4) {
-//                        flywheelOn = true;
-//                    } else {
-//                        flywheelOn = false;
-//                    }
-//                }
-//                break;
-//        }
-//    }
+                case INTAKE1ALIGN:
+                follower.followPath(Path2, true);
+                    if (!follower.isBusy()) {
+                        pathState = PathState.INTAKE1ALIGN_INTAKE1POSE;
+                        break;
+                    }
+
+                case INTAKE1ALIGN_INTAKE1POSE:
+                    follower.followPath(Path3, true);
+                    if (!follower.isBusy()) {
+                        pathState = PathState.INTAKE1POSE_SHOOT2POSE;
+                        break;
+                    }
+                case INTAKE1POSE_SHOOT2POSE:
+                    follower.followPath(Path4, true);
+                    if (!follower.isBusy()) {
+                        pathState = PathState.SHOOT2;
+                        break;
+                }
+                case SHOOT2:
+                    if (!follower.isBusy()) {
+                        ShooterTimer.reset();
+                        if (ShooterTimer.seconds() < 4) {
+                            flywheelOn = true;
+                        } else {
+                            flywheelOn = false;
+                            pathState = PathState.INTAKE2ALIGN;
+                            break;
+                        }
+                }
+                case INTAKE2ALIGN:
+                    follower.followPath(Path5, true);
+                    if (!follower.isBusy()) {
+                        pathState = PathState.INTAKE2ALIGN_INTAKE2POSE;
+                        break;
+                    }
+                case INTAKE2ALIGN_INTAKE2POSE:
+                    follower.followPath(Path6, true);
+                    if (!follower.isBusy()) {
+                        pathState = PathState.INTAKE2POSE_SHOOT3POSE;
+                        break;
+                    }
+                case INTAKE2POSE_SHOOT3POSE:
+                    follower.followPath(Path7, true);
+                    if (!follower.isBusy()) {
+                        pathState = PathState.SHOOT3;
+                        break;
+                }
+                case SHOOT3:
+                    if (!follower.isBusy()) {
+                        ShooterTimer.reset();
+                    if (ShooterTimer.seconds() < 4) {
+                        flywheelOn = true;
+                    } else {
+                        flywheelOn = false;
+                        break;
+                    }
+                }
+        }
+    }
 
     public void setPathState(PathState newState){
         pathState = newState;
