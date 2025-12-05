@@ -5,20 +5,18 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 import org.firstinspires.ftc.teamcode.Mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 
-@TeleOp(name = "Red Side Drive")
-public class Red extends OpMode {
+@TeleOp(name = "Blue Side Drive")
+public class Blue extends OpMode {
 
     private double previousPid = 0.0;   // initialize PID contribution
     private double previousPower = 0.0; // for optional full motor ramp
@@ -70,7 +68,7 @@ public class Red extends OpMode {
         previousPid = 0.0;
         previousPower = 0.0;
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(1);
+        limelight.pipelineSwitch(2);
         imu = hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
@@ -159,11 +157,11 @@ public class Red extends OpMode {
 
         if (input2 && !xWasPressed) {
             flywheelOn = !flywheelOn;
+            pid.reset();
         }
         xWasPressed = input2;
 
         double kF = flywheelOn ? 0.7 : 0.0;
-
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();
         double avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
@@ -182,12 +180,12 @@ public class Red extends OpMode {
             previousPower = power;
         }
 
-        double minusTRPM = 300;
+        double bounds = 300;
 
         if (gamepad1.b && !bPrev) {
 
             if (!intakeOn) {
-                if (avgRPM < (targetRPM + 300) && avgRPM > (targetRPM - minusTRPM)) {
+                if (avgRPM < (targetRPM + bounds) && avgRPM > (targetRPM - bounds)) {
                     intakeOn = true;
                 }
             } else {
