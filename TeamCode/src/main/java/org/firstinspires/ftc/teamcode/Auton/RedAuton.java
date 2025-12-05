@@ -76,7 +76,7 @@ public class RedAuton extends OpMode {
         Path2 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88.000, 88.000), new Pose(102.647, 83.709))
+                        new BezierLine(new Pose(88.000, 88.000), new Pose(.88, 83.709))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
                 .build();
@@ -84,7 +84,7 @@ public class RedAuton extends OpMode {
         Path3 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(102.647, 83.709), new Pose(125.069, 83.211))
+                        new BezierLine(new Pose(88, 83.709), new Pose(125.069, 83.211))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
