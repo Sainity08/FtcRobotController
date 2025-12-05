@@ -76,7 +76,7 @@ public class RedAuton extends OpMode {
         Path2 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88.000, 88.000), new Pose(.88, 83.709))
+                        new BezierLine(new Pose(88.000, 88.000), new Pose(88, 85))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
                 .build();
@@ -84,7 +84,7 @@ public class RedAuton extends OpMode {
         Path3 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 83.709), new Pose(125.069, 83.211))
+                        new BezierLine(new Pose(88, 85), new Pose(125.069, 85))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
@@ -148,13 +148,16 @@ public class RedAuton extends OpMode {
                             pathState = PathState.INTAKE1ALIGN_INTAKE1POSE;
                             break;
                         }
-//
-//                case INTAKE1ALIGN_INTAKE1POSE:
-//                    follower.followPath(Path3, true);
-//                    if (!follower.isBusy()) {
-//                        pathState = PathState.INTAKE1POSE_SHOOT2POSE;
-//                        break;
-//                    }
+
+                case INTAKE1ALIGN_INTAKE1POSE:
+                    if(ShooterDone) {
+                        follower.followPath(Path3, true);
+                        if (!follower.isBusy()) {
+                            pathState = PathState.INTAKE1POSE_SHOOT2POSE;
+                            break;
+                        }
+                    }
+                    
 //                case INTAKE1POSE_SHOOT2POSE:
 //                    follower.followPath(Path4, true);
 //                    pathState = PathState.SHOOT2;
