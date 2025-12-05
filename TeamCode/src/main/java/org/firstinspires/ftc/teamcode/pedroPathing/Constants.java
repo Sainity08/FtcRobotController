@@ -9,15 +9,32 @@ import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+import com.pedropathing.control.PIDFCoefficients;import com.pedropathing.control.FilteredPIDFCoefficients;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 public class Constants {
         public static FollowerConstants followerConstants = new FollowerConstants()
+<<<<<<< Updated upstream
             .mass(9.07)
             .forwardZeroPowerAcceleration(-44.647781505359)
             .lateralZeroPowerAcceleration(-53.104777936320865);
+=======
+            .mass(8.5)
+            .forwardZeroPowerAcceleration(-44.6477881505359)
+            .lateralZeroPowerAcceleration(-53.104777936320865)
+        .translationalPIDFCoefficients(new PIDFCoefficients(
+                                               0.03,
+                                                0,
+                                               0,
+                                               0.015))
+        .headingPIDFCoefficients(new PIDFCoefficients(
+                                               0.8,
+                                                0,
+                                               0,
+                                               0.01
+                                                       ));
+>>>>>>> Stashed changes
         public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
             .rightFrontMotorName("rightFront")
