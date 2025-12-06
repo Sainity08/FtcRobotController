@@ -152,7 +152,7 @@ public class BlueAuton extends OpMode {
         switch (pathState) {
             case STARTPOSE_SHOOT1POSE:
                 follower.followPath(Turn, true);
-            if(!follower.isBusy() | (((follower.getPose().getX()) > 88)) && ((follower.getPose().getY()) > 88)) {
+            if(!follower.isBusy() | (((follower.getPose().getX()) > 55)) && ((follower.getPose().getY()) > 88)) {
                 pathState = PathState.SHOOT1;
                 ShooterTimer.reset();
                 break;
