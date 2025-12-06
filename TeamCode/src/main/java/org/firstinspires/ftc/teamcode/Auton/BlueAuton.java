@@ -137,7 +137,7 @@ public class BlueAuton extends OpMode {
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(24, 36), new Pose(24, 68.5))
+                        new BezierLine(new Pose(2 4, 36), new Pose(24, 68.5))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                 .build();
@@ -247,7 +247,7 @@ public class BlueAuton extends OpMode {
             case INTAKE3ALIGN_INTAKE3POSE:
                 if(ShooterDone1) {
                     follower.followPath(Path9, true);
-                    if (!follower.isBusy() | (follower.getPose().getX()) > 24) {
+                    if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
                         pathState = PathState.INTAKE3POSE_LEVERPOSITION;
                         IntakeDone2 = true;
                         break;
