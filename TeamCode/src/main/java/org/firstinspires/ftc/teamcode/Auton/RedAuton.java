@@ -128,21 +128,21 @@ public class RedAuton extends OpMode {
         Path8 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 88), new Pose(88, 36))
+                        new BezierLine(new Pose(88, 88), new Pose(88, 37))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
                 .build();
         Path9 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 36), new Pose(200, 36))
+                        new BezierLine(new Pose(88, 37), new Pose(200, 37))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 36), new Pose(120, 68.5))
+                        new BezierLine(new Pose(120, 37), new Pose(120, 200))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .build();
@@ -252,7 +252,7 @@ public class RedAuton extends OpMode {
             case INTAKE3ALIGN_INTAKE3POSE:
                 if(ShooterDone1) {
                     follower.followPath(Path9, true);
-                    if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
+                    if (!follower.isBusy() | (follower.getPose().getX()) > 122) {
                         pathState = PathState.INTAKE3POSE_LEVERPOSITION;
                         IntakeDone2 = true;
                         break;
@@ -261,6 +261,9 @@ public class RedAuton extends OpMode {
             case INTAKE3POSE_LEVERPOSITION:
                 if (IntakeDone2){
                     follower.followPath(Path10, true);
+                    if ((follower.getPose().getY()) > 68){
+                        follower.breakFollowing();
+                    }
                     break;
                 }
         }
@@ -316,7 +319,7 @@ public class RedAuton extends OpMode {
 
         boolean input1 = true;
         intake.NonStationary(input1);
-        double distance = 63.5;
+        double distance = 63;
         double targetRPM = -0.000121 * Math.pow(distance, 4)
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)

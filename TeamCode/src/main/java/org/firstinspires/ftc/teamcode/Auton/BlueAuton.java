@@ -123,21 +123,21 @@ public class BlueAuton extends OpMode {
         Path8 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(56, 88), new Pose(56, 36))
+                        new BezierLine(new Pose(56, 88), new Pose(56, 37))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(180))
                 .build();
         Path9 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(56, 36), new Pose(0, 36))
+                        new BezierLine(new Pose(56, 37), new Pose(0, 37))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(2 4, 36), new Pose(24, 68.5))
+                        new BezierLine(new Pose(24, 37), new Pose(24, 200))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                 .build();
@@ -151,12 +151,16 @@ public class BlueAuton extends OpMode {
     public void statePathUpdate() {
         switch (pathState) {
             case STARTPOSE_SHOOT1POSE:
+
+            if(!follower.isBusy()) {
                 follower.followPath(Turn, true);
-            if(!follower.isBusy() | (((follower.getPose().getX()) > 55)) && ((follower.getPose().getY()) > 88)) {
-                pathState = PathState.SHOOT1;
-                ShooterTimer.reset();
-                break;
+                if((((follower.getPose().getX()) > 56)) && ((follower.getPose().getY()) < 88)){
+                    pathState = PathState.SHOOT1;
+                    ShooterTimer.reset();
+                }
             }
+            break;
+
 
 
             case SHOOT1:
@@ -256,6 +260,9 @@ public class BlueAuton extends OpMode {
             case INTAKE3POSE_LEVERPOSITION:
                 if (IntakeDone2){
                     follower.followPath(Path10, true);
+                    if ((follower.getPose().getY()) > 68){
+                        follower.breakFollowing();
+                    }
                     break;
                 }
         }
@@ -311,7 +318,7 @@ public class BlueAuton extends OpMode {
 
         boolean input1 = true;
         intake.NonStationary(input1);
-        double distance = 63.5;
+        double distance = 63;
         double targetRPM = -0.000121 * Math.pow(distance, 4)
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
