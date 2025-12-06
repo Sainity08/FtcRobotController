@@ -258,7 +258,7 @@ public class RedAuton extends OpMode {
                         break;
                     }
                 }
-            case INTAKE2POSE_SHOOT3POSE:
+            case INTAKE3POSE_LEVERPOSITION:
                 if (IntakeDone2){
                     follower.followPath(Path10, true);
                     break;
