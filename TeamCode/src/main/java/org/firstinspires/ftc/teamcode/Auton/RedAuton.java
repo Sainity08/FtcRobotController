@@ -144,7 +144,7 @@ public class RedAuton extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(120, 36), new Pose(120, 68.5))
                 )
-                .setTangentHeadingInterpolation()
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .build();
     }
     boolean ShooterDone = false;
@@ -251,7 +251,7 @@ public class RedAuton extends OpMode {
                 }
             case INTAKE3ALIGN_INTAKE3POSE:
                 if(ShooterDone1) {
-                    follower.followPath(Path6, true);
+                    follower.followPath(Path9, true);
                     if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
                         pathState = PathState.INTAKE3POSE_LEVERPOSITION;
                         IntakeDone2 = true;
