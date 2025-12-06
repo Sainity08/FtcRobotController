@@ -51,9 +51,9 @@ public class RedAuton extends OpMode {
         MOVE_OFF_LINE,
     }
     PathState pathState;
-    double shootAngle = 236.25;
+    double shootAngle = (236.25 - 2.3);
 
-    private final Pose startPose = new Pose(88.000, 88.000,Math.toRadians(270));
+    private final Pose startPose = new Pose(11.35, 134.1,Math.toRadians(270));
     public PathChain Turn;
     public PathChain Path2;
     public PathChain Path3;
@@ -68,7 +68,7 @@ public class RedAuton extends OpMode {
         Turn = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(87, 87), new Pose(88, 88.000))
+                        new BezierLine(new Pose(11.35, 134.1), new Pose(88, 88.000))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(shootAngle))
                 .build();
@@ -122,83 +122,44 @@ public class RedAuton extends OpMode {
                 .build();
     }
     boolean ShooterDone = false;
+    boolean ShooterDone1 = false;
+    boolean IntakeDone = false;
     public void statePathUpdate() {
         switch (pathState) {
             case STARTPOSE_SHOOT1POSE:
-                follower.followPath(Turn, true);
-                pathState = PathState.SHOOT1;
-                ShooterTimer.reset();
-                break;
-
-
-            case SHOOT1:
-                if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() < 4) {
-                        flywheelOn = true;
-                    } else {
-                        flywheelOn = false;
-                        pathState = PathState.INTAKE1ALIGN;
-                        ShooterDone = true;
-                        break;
-                    }
-                }
-                case INTAKE1ALIGN:
-                        if(ShooterDone) {
-                            follower.followPath(Path2, true);
-                            pathState = PathState.INTAKE1ALIGN_INTAKE1POSE;
-                            break;
-                        }
-
-                case INTAKE1ALIGN_INTAKE1POSE:
-                    if(ShooterDone) {
-                        follower.followPath(Path3, true);
-                        if (!follower.isBusy()) {
-                            pathState = PathState.INTAKE1POSE_SHOOT2POSE;
-                            break;
-                        }
-                    }
-                    
-//                case INTAKE1POSE_SHOOT2POSE:
+//            case INTAKE2ALIGN:
+//                if(ShooterDone1) {
+//                    follower.followPath(Path2, true);
+//                    pathState = PathState.INTAKE2ALIGN_INTAKE2POSE;
+//                    break;
+//                }
+//
+//            case INTAKE2ALIGN_INTAKE2POSE:
+//                if(ShooterDone1) {
+//                    follower.followPath(Path3, true);
+//                    if (!follower.isBusy()) {
+//                        pathState = PathState.INTAKE2POSE_SHOOT3POSE;
+//                        break;
+//                    }
+//                }
+//
+//            case INTAKE2POSE_SHOOT3POSE:
+//                if(ShooterDone1) {
 //                    follower.followPath(Path4, true);
 //                    pathState = PathState.SHOOT2;
 //                    break;
-//                case SHOOT2:
-//                    if (!follower.isBusy()) {
-//                        ShooterTimer.reset();
+//                }
+//                case SHOOT3:
+//                    if (!follower.isBusy() && !ShooterDone) {
 //                        if (ShooterTimer.seconds() < 4) {
 //                            flywheelOn = true;
 //                        } else {
 //                            flywheelOn = false;
 //                            pathState = PathState.INTAKE2ALIGN;
+//                            ShooterDone = true;
 //                            break;
 //                        }
-//                }
-//                case INTAKE2ALIGN:
-//                    follower.followPath(Path5, true);
-//                    if (!follower.isBusy()) {
-//                        pathState = PathState.INTAKE2ALIGN_INTAKE2POSE;
-//                        break;
 //                    }
-//                case INTAKE2ALIGN_INTAKE2POSE:
-//                    follower.followPath(Path6, true);
-//                    if (!follower.isBusy()) {
-//                        pathState = PathState.INTAKE2POSE_SHOOT3POSE;
-//                        break;
-//                    }
-//                case INTAKE2POSE_SHOOT3POSE:
-//                    follower.followPath(Path7, true);
-//                    pathState = PathState.SHOOT3;
-//                    break;
-//                case SHOOT3:
-//                    if (!follower.isBusy()) {
-//                        ShooterTimer.reset();
-//                    if (ShooterTimer.seconds() < 4) {
-//                        flywheelOn = true;
-//                    } else {
-//                        flywheelOn = false;
-//                        break;
-//                    }
-//                }
         }
     }
 
@@ -247,6 +208,8 @@ public class RedAuton extends OpMode {
         telemetry.addData("shooter timer", ShooterTimer.seconds());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading());
+
 
         boolean input1 = true;
         intake.NonStationary(input1);
