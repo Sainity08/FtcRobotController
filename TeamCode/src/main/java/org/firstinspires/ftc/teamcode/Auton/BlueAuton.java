@@ -152,15 +152,14 @@ public class BlueAuton extends OpMode {
         switch (pathState) {
             case STARTPOSE_SHOOT1POSE:
 
-            if(!follower.isBusy()) {
-                follower.followPath(Turn, true);
-                if((((follower.getPose().getX()) > 56)) && ((follower.getPose().getY()) < 88)){
-                    pathState = PathState.SHOOT1;
-                    ShooterTimer.reset();
+                if (!follower.isBusy()) {
+                    follower.followPath(Turn, true);
+                    if ((((follower.getPose().getX()) > 56)) && ((follower.getPose().getY()) < 88)) {
+                        pathState = PathState.SHOOT1;
+                        ShooterTimer.reset();
+                    }
                 }
-            }
-            break;
-
+                break;
 
 
             case SHOOT1:
@@ -171,31 +170,37 @@ public class BlueAuton extends OpMode {
                         ShooterDone = true;
                     } else {
                         flywheelOn = true;
-                        }
+                    }
                 }
                 break;
             case INTAKE1ALIGN:
-                if(ShooterDone) {
-                    follower.followPath(Path2, true);
-                    pathState = PathState.INTAKE1ALIGN_INTAKE1POSE;
-                    break;
-                }
-
-            case INTAKE1ALIGN_INTAKE1POSE:
-                if(ShooterDone) {
-                    follower.followPath(Path3, true);
-                    if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
-                        pathState = PathState.INTAKE1POSE_SHOOT2POSE;
-                        IntakeDone = true;
+                if (!follower.isBusy()) {
+                    if (ShooterDone) {
+                        follower.followPath(Path2, true);
+                        pathState = PathState.INTAKE1ALIGN_INTAKE1POSE;
                         break;
                     }
                 }
+
+            case INTAKE1ALIGN_INTAKE1POSE:
+                if (!follower.isBusy()) {
+                    if (ShooterDone) {
+                        follower.followPath(Path3, true);
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
+                            pathState = PathState.INTAKE1POSE_SHOOT2POSE;
+                            IntakeDone = true;
+                            break;
+                        }
+                    }
+                }
             case INTAKE1POSE_SHOOT2POSE:
-                if (IntakeDone){
-                    follower.followPath(Path4, true);
-                    pathState = PathState.SHOOT2;
-                    ShooterTimer.reset();
-                    break;
+                if (!follower.isBusy()) {
+                    if (IntakeDone) {
+                        follower.followPath(Path4, true);
+                        pathState = PathState.SHOOT2;
+                        ShooterTimer.reset();
+                        break;
+                    }
                 }
             case SHOOT2:
                 if (!follower.isBusy()) {
@@ -209,27 +214,33 @@ public class BlueAuton extends OpMode {
                 }
                 break;
             case INTAKE2ALIGN:
-                if(ShooterDone1) {
-                    follower.followPath(Path5, true);
-                    pathState = PathState.INTAKE2ALIGN_INTAKE2POSE;
-                    break;
-                }
-
-            case INTAKE2ALIGN_INTAKE2POSE:
-                if(ShooterDone1) {
-                    follower.followPath(Path6, true);
-                    if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
-                        pathState = PathState.INTAKE2POSE_SHOOT3POSE;
-                        IntakeDone1 = true;
+                if (!follower.isBusy()) {
+                    if (ShooterDone1) {
+                        follower.followPath(Path5, true);
+                        pathState = PathState.INTAKE2ALIGN_INTAKE2POSE;
                         break;
                     }
                 }
+
+            case INTAKE2ALIGN_INTAKE2POSE:
+                if (!follower.isBusy()) {
+                    if (ShooterDone1) {
+                        follower.followPath(Path6, true);
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
+                            pathState = PathState.INTAKE2POSE_SHOOT3POSE;
+                            IntakeDone1 = true;
+                            break;
+                        }
+                    }
+                }
             case INTAKE2POSE_SHOOT3POSE:
-                if (IntakeDone1){
-                    follower.followPath(Path7, true);
-                    pathState = PathState.SHOOT3;
-                    ShooterTimer.reset();
-                    break;
+                if (!follower.isBusy()) {
+                    if (IntakeDone1) {
+                        follower.followPath(Path7, true);
+                        pathState = PathState.SHOOT3;
+                        ShooterTimer.reset();
+                        break;
+                    }
                 }
             case SHOOT3:
                 if (!follower.isBusy()) {
@@ -243,27 +254,33 @@ public class BlueAuton extends OpMode {
                 }
                 break;
             case INTAKE3ALIGN:
-                if(ShooterDone2) {
-                    follower.followPath(Path8, false);
-                    pathState = PathState.INTAKE3ALIGN_INTAKE3POSE;
-                    break;
-                }
-            case INTAKE3ALIGN_INTAKE3POSE:
-                if(ShooterDone1) {
-                    follower.followPath(Path9, true);
-                    if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
-                        pathState = PathState.INTAKE3POSE_LEVERPOSITION;
-                        IntakeDone2 = true;
+                if (!follower.isBusy()) {
+                    if (ShooterDone2) {
+                        follower.followPath(Path8, false);
+                        pathState = PathState.INTAKE3ALIGN_INTAKE3POSE;
                         break;
                     }
                 }
-            case INTAKE3POSE_LEVERPOSITION:
-                if (IntakeDone2){
-                    follower.followPath(Path10, true);
-                    if ((follower.getPose().getY()) > 68){
-                        follower.breakFollowing();
+            case INTAKE3ALIGN_INTAKE3POSE:
+                if (!follower.isBusy()) {
+                    if (ShooterDone1) {
+                        follower.followPath(Path9, true);
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 22) {
+                            pathState = PathState.INTAKE3POSE_LEVERPOSITION;
+                            IntakeDone2 = true;
+                            break;
+                        }
                     }
-                    break;
+                }
+            case INTAKE3POSE_LEVERPOSITION:
+                if (!follower.isBusy()) {
+                    if (IntakeDone2) {
+                        follower.followPath(Path10, true);
+                        if ((follower.getPose().getY()) > 68) {
+                            follower.breakFollowing();
+                        }
+                        break;
+                    }
                 }
         }
     }
