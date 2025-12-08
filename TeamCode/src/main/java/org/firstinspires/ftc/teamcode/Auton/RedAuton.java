@@ -319,7 +319,7 @@ public class RedAuton extends OpMode {
 
         boolean input1 = true;
         intake.NonStationary(input1);
-        double distance = 63;
+        double distance = 62.5;
         double targetRPM = -0.000121 * Math.pow(distance, 4)
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
