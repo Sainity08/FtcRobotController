@@ -5,22 +5,17 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "Red Side Auton")
-public class RedAuton extends OpMode {
+@Autonomous(name = "Blue 9 Ball Auton")
+public class BlueAuton9 extends OpMode {
 
     private Follower follower;
     private boolean flywheelOn = false;
@@ -53,9 +48,9 @@ public class RedAuton extends OpMode {
         INTAKE3POSE_LEVERPOSITION,
     }
     PathState pathState;
-    double shootAngle = (228.22);
+    double shootAngle = (308.22);
 
-    private final Pose startPose = new Pose(111.3, 134.1, (Math.toRadians(270)));
+    private final Pose startPose = new Pose(32.7, 134.1, (Math.toRadians(270)));
     public PathChain Turn;
     public PathChain Path2;
     public PathChain Path3;
@@ -73,7 +68,7 @@ public class RedAuton extends OpMode {
         Turn = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(111.3, 134.1), new Pose(88, 88.000))
+                        new BezierLine(new Pose(32.7, 134.1), new Pose(56, 88.000))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(shootAngle))
                 .build();
@@ -81,15 +76,15 @@ public class RedAuton extends OpMode {
         Path2 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88.000, 88.000), new Pose(88, 84))
+                        new BezierLine(new Pose(56, 88.000), new Pose(56, 84))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(180))
                 .build();
 
         Path3 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 84), new Pose(200, 84))
+                        new BezierLine(new Pose(56, 84), new Pose(0, 84))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
@@ -97,23 +92,23 @@ public class RedAuton extends OpMode {
         Path4 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 84), new Pose(88, 88))
+                        new BezierLine(new Pose(24, 84), new Pose(56, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle))
                 .build();
 
         Path5 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 88), new Pose(88, 60))
+                        new BezierLine(new Pose(56, 88), new Pose(56, 60))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(180))
                 .build();
 
         Path6 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 60), new Pose(200, 60))
+                        new BezierLine(new Pose(56, 60), new Pose(0, 60))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
@@ -121,30 +116,30 @@ public class RedAuton extends OpMode {
         Path7 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 59.045), new Pose(88, 88))
+                        new BezierLine(new Pose(24, 59.045), new Pose(56, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle))
                 .build();
         Path8 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 88), new Pose(88, 37))
+                        new BezierLine(new Pose(56, 88), new Pose(56, 37))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(180))
                 .build();
         Path9 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 37), new Pose(200, 37))
+                        new BezierLine(new Pose(56, 37), new Pose(0, 37))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 37), new Pose(120, 200))
+                        new BezierLine(new Pose(24, 37), new Pose(24, 200))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                 .build();
     }
     boolean ShooterDone = false;
@@ -159,7 +154,7 @@ public class RedAuton extends OpMode {
 
                 if (!follower.isBusy()) {
                     follower.followPath(Turn, true);
-                    if ((((follower.getPose().getX()) > 88)) && ((follower.getPose().getY()) > 88)) {
+                    if ((((follower.getPose().getX()) > 56)) && ((follower.getPose().getY()) < 88)) {
                         pathState = PathState.SHOOT1;
                         ShooterTimer.reset();
                     }
@@ -191,7 +186,7 @@ public class RedAuton extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
                         follower.followPath(Path3, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
                             pathState = PathState.INTAKE1POSE_SHOOT2POSE;
                             IntakeDone = true;
                             break;
@@ -231,7 +226,7 @@ public class RedAuton extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
                         follower.followPath(Path6, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 24) {
                             pathState = PathState.INTAKE2POSE_SHOOT3POSE;
                             IntakeDone1 = true;
                             break;
@@ -270,7 +265,7 @@ public class RedAuton extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
                         follower.followPath(Path9, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 122) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 22) {
                             pathState = PathState.INTAKE3POSE_LEVERPOSITION;
                             IntakeDone2 = true;
                             break;
