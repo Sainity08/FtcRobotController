@@ -348,8 +348,8 @@ public class RedAuton12 extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setPose(startPose);
-        opmodeTimer = new ElapsedTimer();
-        ShooterTimer = new ElapsedTimer();
+        opmodeTimer = new ElapsedTime();
+        ShooterTimer = new ElapsedTime();
 
         intake.init(hardwareMap);
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "flywheelL");
@@ -385,7 +385,9 @@ public class RedAuton12 extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
-
+        if (gamepad1.a){
+            follower.breakFollowing();
+        }
 
         boolean input1 = true;
         intake.NonStationary(input1);
