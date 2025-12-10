@@ -4,7 +4,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
-import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -26,7 +25,7 @@ public class RedAuton12 extends OpMode {
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;
     private Limelight3A limelight;
-    private double previousPid = 0.0;   // initialize PID contribution
+    private double previousPid = 0.0;
     private double previousPower = 0.0;
     private FlywheelPID pid;
     boolean intakeOn = false;
