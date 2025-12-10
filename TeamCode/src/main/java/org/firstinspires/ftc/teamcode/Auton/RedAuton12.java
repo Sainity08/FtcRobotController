@@ -91,7 +91,7 @@ public class RedAuton12 extends OpMode {
         Path3 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 84), new Pose(200, 84))
+                        new BezierLine(new Pose(88, 84), new Pose(120, 84))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -100,7 +100,7 @@ public class RedAuton12 extends OpMode {
         Path4 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 84), new Pose(129, 73))
+                        new BezierLine(new Pose(120, 84), new Pose(125, 72))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
                 .build();
@@ -108,7 +108,7 @@ public class RedAuton12 extends OpMode {
         Path5 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(129, 73), new Pose(88, 88))
+                        new BezierLine(new Pose(125, 72), new Pose(88, 88))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle))
                 .build();
@@ -124,7 +124,7 @@ public class RedAuton12 extends OpMode {
         Path7 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 60), new Pose(200, 60))
+                        new BezierLine(new Pose(88, 60), new Pose(120, 60))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -147,7 +147,7 @@ public class RedAuton12 extends OpMode {
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 37), new Pose(200, 37))
+                        new BezierLine(new Pose(88, 37), new Pose(120, 37))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -211,7 +211,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE1ALIGN_INTAKE1POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
-                        follower.followPath(Path3, true);
+                        follower.followPath(Path3, 1, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 118) {
                             pathState = PathState.INTAKE1POSE_LEVERPOSE;
                             break;
@@ -222,7 +222,7 @@ public class RedAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
                         follower.followPath(Path4,  0.75, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
+                        if (!follower.isBusy() | opmodeTimer.seconds > 7) {
                             pathState = PathState.LEVERPOSE_SHOOT2POSE;
                             IntakeDone = true;
                             break;

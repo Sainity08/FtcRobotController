@@ -84,7 +84,7 @@ public class BlueAuton9 extends OpMode {
         Path3 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(56, 84), new Pose(0, 84))
+                        new BezierLine(new Pose(56, 84), new Pose(24, 84))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
@@ -108,7 +108,7 @@ public class BlueAuton9 extends OpMode {
         Path6 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(56, 60), new Pose(0, 60))
+                        new BezierLine(new Pose(56, 60), new Pose(24, 60))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
@@ -130,14 +130,14 @@ public class BlueAuton9 extends OpMode {
         Path9 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(56, 37), new Pose(0, 37))
+                        new BezierLine(new Pose(56, 37), new Pose(24, 37))
                 )
                 .setTangentHeadingInterpolation()
                 .build();
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(24, 37), new Pose(24, 200))
+                        new BezierLine(new Pose(24, 37), new Pose(24, 72))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                 .build();
@@ -153,7 +153,7 @@ public class BlueAuton9 extends OpMode {
             case STARTPOSE_SHOOT1POSE:
 
                 if (!follower.isBusy()) {
-                    follower.followPath(Turn, true);
+                    follower.followPath(Turn,0.9, true);
                     if ((((follower.getPose().getX()) > 56)) && ((follower.getPose().getY()) < 88)) {
                         pathState = PathState.SHOOT1;
                         ShooterTimer.reset();
@@ -196,7 +196,7 @@ public class BlueAuton9 extends OpMode {
             case INTAKE1POSE_SHOOT2POSE:
                 if (!follower.isBusy()) {
                     if (IntakeDone) {
-                        follower.followPath(Path4, true);
+                        follower.followPath(Path4,0.9, true);
                         pathState = PathState.SHOOT2;
                         ShooterTimer.reset();
                         break;
@@ -236,7 +236,7 @@ public class BlueAuton9 extends OpMode {
             case INTAKE2POSE_SHOOT3POSE:
                 if (!follower.isBusy()) {
                     if (IntakeDone1) {
-                        follower.followPath(Path7, true);
+                        follower.followPath(Path7,0.9, true);
                         pathState = PathState.SHOOT3;
                         ShooterTimer.reset();
                         break;
@@ -335,7 +335,7 @@ public class BlueAuton9 extends OpMode {
 
         boolean input1 = true;
         intake.NonStationary(input1);
-        double distance = 62.5;
+        double distance = 62.25;
         double targetRPM = -0.000121 * Math.pow(distance, 4)
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
