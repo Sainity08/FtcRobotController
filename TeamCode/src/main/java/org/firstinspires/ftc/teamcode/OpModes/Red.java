@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -41,8 +42,10 @@ public class Red extends OpMode {
     private ElapsedTime timer = new ElapsedTime();
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;
-    public AnalogInput axonL;
-    public AnalogInput axonR;
+    public AnalogInput axonIL;
+    public AnalogInput axonIR;
+    public CRServo axonL;
+    public CRServo axonR;
 
     public DcMotorEx SIntake;
     private boolean xWasPressed = false;
@@ -59,8 +62,10 @@ public class Red extends OpMode {
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "flywheelL");
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "flywheelR");
         SIntake = hardwareMap.get(DcMotorEx.class, "intake2");
-        axonL = hardwareMap.get(AnalogInput.class, "axonIL");
-        axonR = hardwareMap.get(AnalogInput.class, "axonIR");
+        axonIL = hardwareMap.get(AnalogInput.class, "axonIL");
+        axonIR = hardwareMap.get(AnalogInput.class, "axonIR");
+        axonL = hardwareMap.get(CRServo.class, "axonL");
+        axonR = hardwareMap.get(CRServo.class, "axonR");
 
         leftFlywheel.setDirection(DcMotorEx.Direction.REVERSE);
         rightFlywheel.setDirection(DcMotorEx.Direction.FORWARD);
@@ -142,12 +147,17 @@ public class Red extends OpMode {
         telemetry.addData("Tx", llResult.getTx());
         telemetry.addData("Ty", llResult.getTy());
         telemetry.addData("Distance", distance);
-        double vL = axonL.getVoltage();
+
+        double vL = axonIL.getVoltage();
         double servoAngleL = (vL / 3.3) * 360.0;
         telemetry.addData("Angle Left (deg)", servoAngleL);
-        double vR = axonR.getVoltage();
+        double vR = axonIR.getVoltage();
         double servoAngleR = (vR / 3.3) * 360.0;
         telemetry.addData("Angle Right (deg)", servoAngleR);
+        axonL.setPower(gamepad1.dpad_left? 1:0);
+        axonR.setPower(gamepad1.dpad_left? 1:0);
+        axonL.setPower(gamepad1.dpad_right? -1:0);
+        axonR.setPower(gamepad1.dpad_right? -1:0);
 
         if (gamepad1.x && !yWasPressed) {
             autoAim = !autoAim;
