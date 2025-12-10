@@ -21,7 +21,7 @@ public class RedAuton12 extends OpMode {
     private Follower follower;
     private boolean flywheelOn = false;
     private ElapsedTime ShooterTimer = new ElapsedTime();
-    private Timer opmodeTimer;
+    private ElapsedTime opmodeTimer = new ElapsedTime();
     Intake intake = new Intake();
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;
@@ -101,7 +101,7 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(120, 84), new Pose(129, 73))
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .build();
 
         Path5 = follower
@@ -208,10 +208,9 @@ public class RedAuton12 extends OpMode {
             case INTAKE1ALIGN_INTAKE1POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
-                        follower.followPath(Path3, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
+                        follower.followPath(Path3, 0.5, true);
+                        if (!follower.isBusy() | (follower.getPose().getX()) > 118) {
                             pathState = PathState.INTAKE1POSE_LEVERPOSE;
-                            IntakeDone = true;
                             break;
                         }
                     }
@@ -349,8 +348,8 @@ public class RedAuton12 extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setPose(startPose);
-        opmodeTimer = new Timer();
-        ShooterTimer = new ElapsedTime();
+        opmodeTimer = new ElapsedTimer();
+        ShooterTimer = new ElapsedTimer();
 
         intake.init(hardwareMap);
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "flywheelL");
@@ -382,6 +381,7 @@ public class RedAuton12 extends OpMode {
         telemetry.addData("Path State", pathState.toString());
         telemetry.addData("follower is busy", follower.isBusy());
         telemetry.addData("shooter timer", ShooterTimer.seconds());
+        telemetry.addData("OpMode Timer", opmodeTimer.seconds());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
