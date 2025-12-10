@@ -66,6 +66,7 @@ public class RedAuton12 extends OpMode {
     public PathChain Path10;
     public PathChain Path11;
     public PathChain Path12;
+    double intakeTimeout = 250;
 
 
 
@@ -93,6 +94,7 @@ public class RedAuton12 extends OpMode {
                         new BezierLine(new Pose(88, 84), new Pose(200, 84))
                 )
                 .setTangentHeadingInterpolation()
+                .setTimeoutConstraint(intakeTimeout)
                 .build();
 
         Path4 = follower
@@ -125,6 +127,7 @@ public class RedAuton12 extends OpMode {
                         new BezierLine(new Pose(88, 60), new Pose(200, 60))
                 )
                 .setTangentHeadingInterpolation()
+                .setTimeoutConstraint(intakeTimeout)
                 .build();
 
         Path8 = follower
@@ -147,6 +150,7 @@ public class RedAuton12 extends OpMode {
                         new BezierLine(new Pose(88, 37), new Pose(200, 37))
                 )
                 .setTangentHeadingInterpolation()
+                .setTimeoutConstraint(intakeTimeout)
                 .build();
         Path11 = follower
                 .pathBuilder()
@@ -207,7 +211,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE1ALIGN_INTAKE1POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
-                        follower.followPath(Path3, 0.75, true);
+                        follower.followPath(Path3, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 118) {
                             pathState = PathState.INTAKE1POSE_LEVERPOSE;
                             break;
@@ -217,7 +221,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE1POSE_LEVERPOSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
-                        follower.followPath(Path4, true);
+                        follower.followPath(Path4,  0.75, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
                             pathState = PathState.LEVERPOSE_SHOOT2POSE;
                             IntakeDone = true;
@@ -257,7 +261,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE2ALIGN_INTAKE2POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
-                        follower.followPath(Path7, 0.75, true);
+                        follower.followPath(Path7, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
                             pathState = PathState.INTAKE2POSE_SHOOT3POSE;
                             IntakeDone1 = true;
@@ -296,7 +300,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE3ALIGN_INTAKE3POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
-                        follower.followPath(Path10,0.75, true);
+                        follower.followPath(Path10,true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 122) {
                             pathState = PathState.INTAKE3POSE_SHOOT4;
                             IntakeDone2 = true;
@@ -384,6 +388,7 @@ public class RedAuton12 extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
+
         if (gamepad2.a){
             follower.breakFollowing();
         }
