@@ -101,7 +101,7 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(120, 84), new Pose(129, 73))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
                 .build();
 
         Path5 = follower
@@ -109,7 +109,7 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(129, 73), new Pose(88, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle))
                 .build();
 
         Path6 = follower
@@ -208,7 +208,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE1ALIGN_INTAKE1POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
-                        follower.followPath(Path3, 0.5, true);
+                        follower.followPath(Path3, 0.75, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 118) {
                             pathState = PathState.INTAKE1POSE_LEVERPOSE;
                             break;
@@ -258,7 +258,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE2ALIGN_INTAKE2POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
-                        follower.followPath(Path7, true);
+                        follower.followPath(Path7, 0.75, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 120) {
                             pathState = PathState.INTAKE2POSE_SHOOT3POSE;
                             IntakeDone1 = true;
@@ -297,7 +297,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE3ALIGN_INTAKE3POSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
-                        follower.followPath(Path10, true);
+                        follower.followPath(Path10,0.75, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 122) {
                             pathState = PathState.INTAKE3POSE_SHOOT4;
                             IntakeDone2 = true;
