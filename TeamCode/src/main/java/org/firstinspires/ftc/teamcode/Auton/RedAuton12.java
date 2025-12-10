@@ -66,7 +66,7 @@ public class RedAuton12 extends OpMode {
     public PathChain Path10;
     public PathChain Path11;
     public PathChain Path12;
-    double intakeTimeout = 250;
+    double intakeTimeout = 0.25;
 
 
 
@@ -124,7 +124,7 @@ public class RedAuton12 extends OpMode {
         Path7 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 60), new Pose(120, 60))
+                        new BezierLine(new Pose(88, 60), new Pose(121, 60))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -133,7 +133,7 @@ public class RedAuton12 extends OpMode {
         Path8 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 59.045), new Pose(88, 88))
+                        new BezierLine(new Pose(121, 60), new Pose(88, 88))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
                 .build();
