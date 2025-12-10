@@ -222,7 +222,7 @@ public class RedAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
                         follower.followPath(Path4,  0.75, true);
-                        if (!follower.isBusy() | opmodeTimer.seconds > 7) {
+                        if (!follower.isBusy() | opmodeTimer.seconds() > 7) {
                             pathState = PathState.LEVERPOSE_SHOOT2POSE;
                             IntakeDone = true;
                             break;
