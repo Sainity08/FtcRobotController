@@ -384,7 +384,7 @@ public class RedAuton12 extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
-        if (gamepad1.a){
+        if (gamepad2.a){
             follower.breakFollowing();
         }
 
