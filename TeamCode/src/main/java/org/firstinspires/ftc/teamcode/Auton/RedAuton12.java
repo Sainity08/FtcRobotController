@@ -101,9 +101,9 @@ public class RedAuton12 extends OpMode {
         Path4 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 84), new Pose(126, 80))
+                        new BezierLine(new Pose(120.000, 84.000), new Pose(128.000, 71.000))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                 .build();
 
         Path5 = follower
@@ -111,7 +111,7 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(126, 80), new Pose(88, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
                 .build();
 
         Path6 = follower
@@ -223,7 +223,7 @@ public class RedAuton12 extends OpMode {
             case INTAKE1POSE_LEVERPOSE:
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
-                        follower.followPath(Path4,  0.75, true);
+                        follower.followPath(Path4,  0.85, true);
                         if (!follower.isBusy() && LeverTimer.seconds() < 2) {
                             pathState = PathState.LEVERPOSE_SHOOT2POSE;
                             IntakeDone = true;
