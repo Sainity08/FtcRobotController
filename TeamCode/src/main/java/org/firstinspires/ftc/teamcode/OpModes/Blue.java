@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -40,12 +42,20 @@ public class Blue extends OpMode {
     public DcMotorEx rightFlywheel = null;
 
     public DcMotorEx SIntake;
+    public AnalogInput axonIL;
+    public AnalogInput axonIR;
+    public CRServo axonL;
+    public CRServo axonR;
     private boolean xWasPressed = false;
     boolean autoAim = false;
     boolean yWasPressed = false;
     boolean bPrev = false;
     boolean xPrev = false;
     boolean intakeOn = false;
+    double lastAngle = 0;
+    double continuousAngle = 0;
+    int rotations = 0;
+    boolean firstRead = true;
 
     @Override
     public void init() {
@@ -60,6 +70,10 @@ public class Blue extends OpMode {
 
         leftFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        axonIL = hardwareMap.get(AnalogInput.class, "axonIL");
+        axonIR = hardwareMap.get(AnalogInput.class, "axonIR");
+        axonL = hardwareMap.get(CRServo.class, "axonL");
+        axonR = hardwareMap.get(CRServo.class, "axonR");
 
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
@@ -97,6 +111,10 @@ public class Blue extends OpMode {
         telemetry.update();
     }
 
+    public double getAxonAngle() {
+        double voltage = axonIL.getVoltage();
+        return (voltage / 3.3) * 360.0;
+    }
 
 
     @Override
@@ -136,6 +154,32 @@ public class Blue extends OpMode {
         telemetry.addData("Ty", llResult.getTy());
         telemetry.addData("Distance", distance);
 
+        double rawAngle = getAxonAngle();
+        if (firstRead) {
+            lastAngle = rawAngle;
+            continuousAngle = rawAngle;
+            rotations = 0;
+            firstRead = false;
+        } else {
+            double delta = rawAngle - lastAngle;
+
+            // Detect wrap-around
+            if (delta > 180) {
+                delta -= 360;
+                rotations--; // went negative over 0 boundary
+            } else if (delta < -180) {
+                delta += 360;
+                rotations++; // went positive over 360 boundary
+            }
+
+            // Update continuous angle
+            continuousAngle = rawAngle + 360 * rotations;
+
+            lastAngle = rawAngle;
+        }
+        telemetry.addData("Axon Angle (deg)", rawAngle);
+        telemetry.addData("Turret Angle (deg)", continuousAngle);
+
         if (gamepad1.x && !yWasPressed) {
             autoAim = !autoAim;
         }
@@ -143,14 +187,40 @@ public class Blue extends OpMode {
 
         double tx = llResult.getTx();
         boolean hasTarget = (llResult.isValid());
+        double axonPower = 0;
         if (autoAim && hasTarget) {
-            double kP = 0.01;
-            turn = kP * tx;
-
-            if (Math.abs(tx) < 1.0) {
-                turn = 0;
+            double kP = 0.008;
+            if (Math.abs(tx) < 0.5) {
+                axonPower = 0;
+            } else {
+                if (continuousAngle > 68){
+                    axonPower = -0.2;
+                }else {
+                    if (continuousAngle < -340) {
+                        axonPower = 0.2;
+                    } else {
+                        axonPower = -(tx * kP);
+                    }
+                }
             }
         }
+
+        if (!autoAim){
+            if (continuousAngle > -134) {
+                axonPower = -0.25;
+            } else {
+                if (continuousAngle < -144) {
+                    axonPower = 0.25;
+                } else {
+                    axonPower = 0;
+                }
+            }
+
+        }
+        axonPower = Math.max(Math.min(axonPower, 1.0), -1.0);
+        axonL.setPower(axonPower);
+        axonR.setPower(axonPower);
+
         drive.driveRobotRelative(y, x, turn);
         intake.NonStationary(input1);
 
