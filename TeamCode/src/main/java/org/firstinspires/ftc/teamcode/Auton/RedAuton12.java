@@ -20,6 +20,7 @@ public class RedAuton12 extends OpMode {
     private Follower follower;
     private boolean flywheelOn = false;
     private ElapsedTime ShooterTimer = new ElapsedTime();
+    private ElapsedTime LeverTimer = new ElapsedTime();
     private ElapsedTime opmodeTimer = new ElapsedTime();
     Intake intake = new Intake();
     public DcMotorEx leftFlywheel = null;
@@ -51,7 +52,7 @@ public class RedAuton12 extends OpMode {
         SHOOT4_LEVERPOSITION,
     }
     PathState pathState;
-    double shootAngle = (228.22);
+    double shootAngle = (227.22);
 
     private final Pose startPose = new Pose(111.3, 134.1, (Math.toRadians(270)));
     public PathChain Turn;
@@ -100,7 +101,7 @@ public class RedAuton12 extends OpMode {
         Path4 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120, 84), new Pose(125, 72))
+                        new BezierLine(new Pose(120, 84), new Pose(126, 80))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
                 .build();
@@ -108,7 +109,7 @@ public class RedAuton12 extends OpMode {
         Path5 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(125, 72), new Pose(88, 88))
+                        new BezierLine(new Pose(126, 80), new Pose(88, 88))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle))
                 .build();
@@ -162,7 +163,7 @@ public class RedAuton12 extends OpMode {
         Path12 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 88), new Pose(125, 70))
+                        new BezierLine(new Pose(88, 88), new Pose(119, 72))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
                 .build();
@@ -214,6 +215,7 @@ public class RedAuton12 extends OpMode {
                         follower.followPath(Path3, 1, true);
                         if (!follower.isBusy() | (follower.getPose().getX()) > 118) {
                             pathState = PathState.INTAKE1POSE_LEVERPOSE;
+                            LeverTimer.reset();
                             break;
                         }
                     }
@@ -222,7 +224,7 @@ public class RedAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
                         follower.followPath(Path4,  0.75, true);
-                        if (!follower.isBusy() | opmodeTimer.seconds() > 7) {
+                        if (!follower.isBusy() && LeverTimer.seconds() < 1.5) {
                             pathState = PathState.LEVERPOSE_SHOOT2POSE;
                             IntakeDone = true;
                             break;
@@ -353,6 +355,7 @@ public class RedAuton12 extends OpMode {
         follower.setPose(startPose);
         opmodeTimer = new ElapsedTime();
         ShooterTimer = new ElapsedTime();
+        LeverTimer = new ElapsedTime();
 
         intake.init(hardwareMap);
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "flywheelL");
@@ -384,6 +387,7 @@ public class RedAuton12 extends OpMode {
         telemetry.addData("Path State", pathState.toString());
         telemetry.addData("follower is busy", follower.isBusy());
         telemetry.addData("shooter timer", ShooterTimer.seconds());
+        telemetry.addData("lever timer", LeverTimer.seconds());
         telemetry.addData("OpMode Timer", opmodeTimer.seconds());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
