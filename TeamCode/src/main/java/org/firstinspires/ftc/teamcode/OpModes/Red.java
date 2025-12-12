@@ -191,34 +191,34 @@ public class Red extends OpMode {
         boolean hasTarget = (llResult.isValid());
         double axonPower = 0;
         if (autoAim && hasTarget) {
-                double kP = 0.01;
-                if (Math.abs(tx) < 0.125) {
-                    axonPower = 0;
+            double kP = 0.01;
+            if (Math.abs(tx) < 0.125) {
+                axonPower = 0;
+            } else {
+                if (continuousAngle > 68){
+                    axonPower = -0.2;
                 } else {
-                        if (continuousAngle > 68){
-                            axonPower = -0.2;
-                        } else {
-                            if (continuousAngle < -340) {
-                                axonPower = 0.2;
-                            } else {
-                                axonPower = -(tx * kP);
-                            }
-                        }
-                }
-        }
-
-            if (!autoAim){
-                if (continuousAngle > -134) {
-                    axonPower = -0.1;
-                } else {
-                    if (continuousAngle < -144) {
-                        axonPower = 0.1;
+                    if (continuousAngle < -340) {
+                        axonPower = 0.2;
                     } else {
-                        axonPower = 0;
+                        axonPower = -(tx * kP);
                     }
                 }
-
             }
+        }
+
+        if (!autoAim){
+            if (continuousAngle > -134) {
+                axonPower = -0.1;
+            } else {
+                if (continuousAngle < -144) {
+                    axonPower = 0.1;
+                } else {
+                    axonPower = 0;
+                }
+            }
+
+        }
         axonPower = Math.max(Math.min(axonPower, 1.0), -1.0);
         axonL.setPower(axonPower);
         axonR.setPower(axonPower);

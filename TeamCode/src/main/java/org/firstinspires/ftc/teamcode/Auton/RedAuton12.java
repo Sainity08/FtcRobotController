@@ -5,8 +5,11 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,7 +34,6 @@ public class RedAuton12 extends OpMode {
     private double previousPower = 0.0;
     private FlywheelPID pid;
     boolean intakeOn = false;
-
     public DcMotorEx SIntake;
 
     public enum PathState {
@@ -73,6 +75,8 @@ public class RedAuton12 extends OpMode {
 
 
 
+
+
     public void buildPaths(){
         Turn = follower
                 .pathBuilder()
@@ -102,7 +106,7 @@ public class RedAuton12 extends OpMode {
         Path4 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120.000, 84.000), new Pose(128, 80))
+                        new BezierLine(new Pose(120.000, 84.000), new Pose(130, 80))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
                 .build();
@@ -110,7 +114,7 @@ public class RedAuton12 extends OpMode {
         Path5 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(128, 80), new Pose(88, 88))
+                        new BezierLine(new Pose(130, 80), new Pose(88, 88))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(shootAngle))
                 .build();
@@ -126,7 +130,7 @@ public class RedAuton12 extends OpMode {
         Path7 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 60), new Pose(124, 60))
+                        new BezierLine(new Pose(88, 60), new Pose(135, 60))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -135,7 +139,7 @@ public class RedAuton12 extends OpMode {
         Path8 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(124, 60), new Pose(88, 88))
+                        new BezierLine(new Pose(135, 60), new Pose(88, 88))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
                 .build();
@@ -149,7 +153,7 @@ public class RedAuton12 extends OpMode {
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 37), new Pose(124, 37))
+                        new BezierLine(new Pose(88, 37), new Pose(135, 37))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -157,7 +161,7 @@ public class RedAuton12 extends OpMode {
         Path11 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(124, 37), new Pose(88, 88))
+                        new BezierLine(new Pose(135, 37), new Pose(88, 88))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
                 .build();
@@ -246,13 +250,15 @@ public class RedAuton12 extends OpMode {
                 }
             case SHOOT2:
                 if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 4.25) {
+                    if (ShooterTimer.seconds() > 4.5) {
                         flywheelOn = false;
                         pathState = PathState.INTAKE2ALIGN;
                         ShooterDone1 = true;
                         indexerOn = false;
                     } else {
-                        indexerOn = true;
+                        if (ShooterTimer.seconds() >  1.75) {
+                            indexerOn = true;
+                        }
                     }
                 }
                 break;
@@ -269,7 +275,7 @@ public class RedAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
                         follower.followPath(Path7, 0.75, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 124) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) > 134) {
                             pathState = PathState.INTAKE2POSE_SHOOT3POSE;
                             IntakeDone1 = true;
                             break;
@@ -288,12 +294,13 @@ public class RedAuton12 extends OpMode {
                 }
             case SHOOT3:
                 if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 4.25) {
+                    if (ShooterTimer.seconds() > 4.5) {
                         flywheelOn = false;
                         pathState = PathState.INTAKE3ALIGN;
                         ShooterDone2 = true;
                         indexerOn = false;
-                    } else {
+                    } else
+                        if (ShooterTimer.seconds() >  1.75) {
                         indexerOn = true;
                     }
                 }
@@ -310,7 +317,7 @@ public class RedAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
                         follower.followPath(Path10, 0.75,true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 124) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) > 134 ) {
                             pathState = PathState.INTAKE3POSE_SHOOT4;
                             IntakeDone2 = true;
                             break;
@@ -330,12 +337,13 @@ public class RedAuton12 extends OpMode {
 
             case SHOOT4:
                 if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 4.25) {
+                    if (ShooterTimer.seconds() > 4.5) {
                         flywheelOn = false;
                         pathState = PathState.SHOOT4_LEVERPOSITION;
                         ShooterDone3 = true;
                         indexerOn = false;
-                    } else {
+                    } else
+                        if (ShooterTimer.seconds() > 1.75) {
                         indexerOn = true;
                     }
                 }
@@ -356,6 +364,15 @@ public class RedAuton12 extends OpMode {
         pathState = newState;
     }
 
+    double lastAngle = 0;
+    double continuousAngle = 0;
+    int rotations = 0;
+    boolean firstRead = true;
+    public AnalogInput axonIL;
+    public AnalogInput axonIR;
+    public CRServo axonL;
+    public CRServo axonR;
+
     @Override
     public void init() {
         pathState = PathState.STARTPOSE_SHOOT1POSE;
@@ -365,7 +382,10 @@ public class RedAuton12 extends OpMode {
         opmodeTimer = new ElapsedTime();
         ShooterTimer = new ElapsedTime();
         LeverTimer = new ElapsedTime();
-
+        axonIL = hardwareMap.get(AnalogInput.class, "axonIL");
+        axonIR = hardwareMap.get(AnalogInput.class, "axonIR");
+        axonL = hardwareMap.get(CRServo.class, "axonL");
+        axonR = hardwareMap.get(CRServo.class, "axonR");
         intake.init(hardwareMap);
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "flywheelL");
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "flywheelR");
@@ -446,5 +466,56 @@ public class RedAuton12 extends OpMode {
         }
 
         SIntake.setPower(intakeOn? 1 : 0);
+
+        LLResult llResult = limelight.getLatestResult();
+        double rawAngle = getAxonAngle();
+        if (firstRead) {
+            lastAngle = rawAngle;
+            continuousAngle = rawAngle;
+            rotations = 0;
+            firstRead = false;
+        } else {
+            double delta = rawAngle - lastAngle;
+
+            // Detect wrap-around
+            if (delta > 180) {
+                delta -= 360;
+                rotations--; // went negative over 0 boundary
+            } else if (delta < -180) {
+                delta += 360;
+                rotations++; // went positive over 360 boundary
+            }
+
+            // Update continuous angle
+            continuousAngle = rawAngle + 360 * rotations;
+
+            lastAngle = rawAngle;
+        }
+        telemetry.addData("Axon Angle (deg)", rawAngle);
+        telemetry.addData("Turret Angle (deg)", continuousAngle);
+
+
+        double tx = llResult.getTx();
+        boolean hasTarget = (llResult.isValid());
+        double axonPower = 0;
+
+        if (input1){
+            if (continuousAngle > -134) {
+                axonPower = -0.1;
+            } else {
+                if (continuousAngle < -144) {
+                    axonPower = 0.1;
+                } else {
+                    axonPower = 0;
+                }
+            }
+
+        }
+        axonL.setPower(axonPower);
+        axonR.setPower(axonPower);
+    }
+    public double getAxonAngle() {
+        double voltage = axonIL.getVoltage();
+        return (voltage / 3.3) * 360.0;
     }
 }
