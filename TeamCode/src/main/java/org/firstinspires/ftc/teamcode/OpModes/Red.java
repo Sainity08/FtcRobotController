@@ -191,8 +191,8 @@ public class Red extends OpMode {
         boolean hasTarget = (llResult.isValid());
         double axonPower = 0;
         if (autoAim && hasTarget) {
-            double kP = 0.01;
-            if (Math.abs(tx) < 0.125) {
+            double kP = 0.008;
+            if (Math.abs(tx) < 0.0625) {
                 axonPower = 0;
             } else {
                 if (continuousAngle > 68){

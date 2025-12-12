@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "Red 12 Ball Auton")
+@Autonomous(name = "Blue 12 Ball Auton")
 public class BlueAuton12 extends OpMode {
 
     private Follower follower;
@@ -91,7 +91,7 @@ public class BlueAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(56, 88.000), new Pose(56, 84))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(180))
                 .build();
 
         Path3 = follower
@@ -106,17 +106,17 @@ public class BlueAuton12 extends OpMode {
         Path4 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(24, 84.000), new Pose(14, 80))
+                        new BezierLine(new Pose(24, 84.000), new Pose(17, 80))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(90))
                 .build();
 
         Path5 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(14, 80), new Pose(56, 88))
+                        new BezierLine(new Pose(17, 80), new Pose(56, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(shootAngle + 8))
                 .build();
 
         Path6 = follower
@@ -124,13 +124,13 @@ public class BlueAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(56, 88), new Pose(56, 60))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle + 8), Math.toRadians(180))
                 .build();
 
         Path7 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(56, 60), new Pose(9, 60))
+                        new BezierLine(new Pose(56, 60), new Pose(11, 60))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -139,21 +139,22 @@ public class BlueAuton12 extends OpMode {
         Path8 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(9, 60), new Pose(56, 88))
+                        new BezierLine(new Pose(11, 60), new Pose(56, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle + 1.5))
+
                 .build();
         Path9 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierLine(new Pose(56, 88), new Pose(56, 37))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle + 1.5), Math.toRadians(180))
                 .build();
         Path10 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(56, 37), new Pose(9, 37))
+                        new BezierLine(new Pose(56, 37), new Pose(11, 37))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -161,16 +162,16 @@ public class BlueAuton12 extends OpMode {
         Path11 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(9, 37), new Pose(56, 88))
+                        new BezierLine(new Pose(11, 37), new Pose(56, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle + 1.5))
                 .build();
         Path12 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierLine(new Pose(56, 88), new Pose(27, 72))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle + 1.5), Math.toRadians(180))
                 .build();
     }
     boolean ShooterDone = false;
@@ -187,7 +188,7 @@ public class BlueAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     follower.followPath(Turn, true);
                     flywheelOn = true;
-                    if ((((follower.getPose().getX()) > 88)) && ((follower.getPose().getY()) > 88)) {
+                    if ((((follower.getPose().getX()) < 56)) && ((follower.getPose().getY()) > 88)) {
                         pathState = PathState.SHOOT1;
                         ShooterTimer.reset();
                     }
@@ -231,7 +232,7 @@ public class BlueAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
                         follower.followPath(Path4,  0.85, true);
-                        if (!follower.isBusy() | LeverTimer.seconds() > 1) {
+                        if (!follower.isBusy() | LeverTimer.seconds() > 1.5) {
                             pathState = PathState.LEVERPOSE_SHOOT2POSE;
                             IntakeDone = true;
                             break;
@@ -275,7 +276,7 @@ public class BlueAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
                         follower.followPath(Path7, 0.75, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) < 10) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 11) {
                             pathState = PathState.INTAKE2POSE_SHOOT3POSE;
                             IntakeDone1 = true;
                             break;
@@ -317,7 +318,7 @@ public class BlueAuton12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
                         follower.followPath(Path10, 0.75,true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) < 10) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 112) {
                             pathState = PathState.INTAKE3POSE_SHOOT4;
                             IntakeDone2 = true;
                             break;
@@ -428,7 +429,7 @@ public class BlueAuton12 extends OpMode {
 
         boolean input1 = true;
         intake.NonStationary(input1);
-        double distance = 62.5;
+        double distance = 58.5;
         double targetRPM = -0.000121 * Math.pow(distance, 4)
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
