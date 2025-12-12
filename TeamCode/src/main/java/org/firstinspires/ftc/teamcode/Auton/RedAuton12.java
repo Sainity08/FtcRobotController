@@ -116,7 +116,7 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(130, 80), new Pose(88, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(shootAngle - 8))
                 .build();
 
         Path6 = follower
@@ -124,7 +124,7 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(88, 88), new Pose(88, 60))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle - 8), Math.toRadians(0))
                 .build();
 
         Path7 = follower
@@ -141,14 +141,14 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(135, 60), new Pose(88, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle - 1.5))
                 .build();
         Path9 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierLine(new Pose(88, 88), new Pose(88, 37))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle - 1.5), Math.toRadians(0))
                 .build();
         Path10 = follower
                 .pathBuilder()
@@ -163,14 +163,14 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(135, 37), new Pose(88, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle + 1.5))
                 .build();
         Path12 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 88), new Pose(119, 72))
+                        new BezierLine(new Pose(88, 88), new Pose(117, 72))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle + 1.5), Math.toRadians(0))
                 .build();
     }
     boolean ShooterDone = false;
@@ -250,7 +250,7 @@ public class RedAuton12 extends OpMode {
                 }
             case SHOOT2:
                 if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 4.5) {
+                    if (ShooterTimer.seconds() > 4.25) {
                         flywheelOn = false;
                         pathState = PathState.INTAKE2ALIGN;
                         ShooterDone1 = true;
@@ -294,13 +294,13 @@ public class RedAuton12 extends OpMode {
                 }
             case SHOOT3:
                 if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 4.5) {
+                    if (ShooterTimer.seconds() > 4.75) {
                         flywheelOn = false;
                         pathState = PathState.INTAKE3ALIGN;
                         ShooterDone2 = true;
                         indexerOn = false;
                     } else
-                        if (ShooterTimer.seconds() >  1.75) {
+                        if (ShooterTimer.seconds() >  2) {
                         indexerOn = true;
                     }
                 }
@@ -337,13 +337,13 @@ public class RedAuton12 extends OpMode {
 
             case SHOOT4:
                 if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 4.5) {
+                    if (ShooterTimer.seconds() > 4.75) {
                         flywheelOn = false;
                         pathState = PathState.SHOOT4_LEVERPOSITION;
                         ShooterDone3 = true;
                         indexerOn = false;
                     } else
-                        if (ShooterTimer.seconds() > 1.75) {
+                        if (ShooterTimer.seconds() > 2) {
                         indexerOn = true;
                     }
                 }
