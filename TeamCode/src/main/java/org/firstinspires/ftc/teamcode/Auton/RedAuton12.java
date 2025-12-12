@@ -141,14 +141,14 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(135, 60), new Pose(88, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle - 1.5))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle - 1.75))
                 .build();
         Path9 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierLine(new Pose(88, 88), new Pose(88, 37))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle - 1.5), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle - 1.75), Math.toRadians(0))
                 .build();
         Path10 = follower
                 .pathBuilder()
@@ -428,7 +428,7 @@ public class RedAuton12 extends OpMode {
 
         boolean input1 = true;
         intake.NonStationary(input1);
-        double distance = 62.5;
+        double distance = 60.5;
         double targetRPM = -0.000121 * Math.pow(distance, 4)
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
