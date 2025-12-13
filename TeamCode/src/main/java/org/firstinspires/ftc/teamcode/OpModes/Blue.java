@@ -190,8 +190,7 @@ public class Blue extends OpMode {
         double axonPower = 0;
         if (autoAim && hasTarget) {
             double kP = 0.008;
-            if (Math.abs(tx) < 0.06
-            25) {
+            if (Math.abs(tx) < 0.0625) {
                 axonPower = 0;
             } else {
                 if (continuousAngle > 68){

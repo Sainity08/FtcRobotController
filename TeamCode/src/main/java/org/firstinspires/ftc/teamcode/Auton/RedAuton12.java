@@ -97,7 +97,7 @@ public class RedAuton12 extends OpMode {
         Path3 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 84), new Pose(120, 84))
+                        new BezierLine(new Pose(88, 84), new Pose(120.5, 84))
                 )
                 .setTangentHeadingInterpolation()
                 .setTimeoutConstraint(intakeTimeout)
@@ -106,7 +106,7 @@ public class RedAuton12 extends OpMode {
         Path4 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(120.000, 84.000), new Pose(130, 80))
+                        new BezierLine(new Pose(120.5, 84.000), new Pose(130, 80))
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
                 .build();
@@ -141,14 +141,14 @@ public class RedAuton12 extends OpMode {
                 .addPath(
                         new BezierLine(new Pose(135, 60), new Pose(88, 88))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle - 1.75))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(shootAngle - .5))
                 .build();
         Path9 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierLine(new Pose(88, 88), new Pose(88, 37))
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(shootAngle - 1.75), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(shootAngle - .5), Math.toRadians(0))
                 .build();
         Path10 = follower
                 .pathBuilder()
@@ -428,7 +428,7 @@ public class RedAuton12 extends OpMode {
 
         boolean input1 = true;
         intake.NonStationary(input1);
-        double distance = 68.5;
+        double distance = 58.5;
         double targetRPM = -0.000121 * Math.pow(distance, 4)
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
@@ -499,18 +499,16 @@ public class RedAuton12 extends OpMode {
         boolean hasTarget = (llResult.isValid());
         double axonPower = 0;
 
-        if (input1){
-            if (continuousAngle > -134) {
+        if (continuousAngle > -134) {
                 axonPower = -0.1;
+        } else {
+            if (continuousAngle < -144) {
+                axonPower = 0.1;
             } else {
-                if (continuousAngle < -144) {
-                    axonPower = 0.1;
-                } else {
-                    axonPower = 0;
-                }
+                axonPower = 0;
             }
-
         }
+
         axonL.setPower(axonPower);
         axonR.setPower(axonPower);
     }
