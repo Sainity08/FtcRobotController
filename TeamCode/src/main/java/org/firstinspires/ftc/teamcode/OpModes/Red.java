@@ -148,7 +148,7 @@ public class Red extends OpMode {
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
                     + 147 * distance
-                    + 1214;
+                    + 1224;
             rpm = Math.max(3000, Math.min(rpm, 5000));
             targetRPM = rpm;
         }
@@ -191,7 +191,7 @@ public class Red extends OpMode {
         boolean hasTarget = (llResult.isValid());
         double axonPower = 0;
         if (autoAim && hasTarget) {
-            double kP = 0.008;
+            double kP = 0.0065;
             if (Math.abs(tx) < 0.0625) {
                 axonPower = 0;
             } else {
