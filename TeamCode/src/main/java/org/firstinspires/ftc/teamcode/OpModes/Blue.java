@@ -145,7 +145,8 @@ public class Blue extends OpMode {
                     + 0.0339 * Math.pow(distance, 3)
                     - 3.29 * Math.pow(distance, 2)
                     + 147 * distance
-                    + 1224;
+                    + 1244;
+
             rpm = Math.max(3000, Math.min(rpm, 5000));
             targetRPM = rpm;
         }
