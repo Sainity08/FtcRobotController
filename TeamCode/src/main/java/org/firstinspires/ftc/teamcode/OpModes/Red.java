@@ -192,7 +192,7 @@ public class Red extends OpMode {
         double axonPower = 0;
         if (autoAim && hasTarget) {
             double kP = 0.0065;
-            if (Math.abs(tx) < 0.0625) {
+            if (Math.abs(tx) < 1) {
                 axonPower = 0;
             } else {
                 if (continuousAngle > 68){
