@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.PID;
+package org.firstinspires.ftc.teamcode.Nero.PID;
 
 import com.pedropathing.math.MathFunctions;
 
-public class FlywheelPID {
+public class NeroFlywheelPID {
 
     private double kP, kI, kD, kF;
     private double integral = 0;
     private double lastError = 0;
     private double previousPower = 0.0;
 
-    public FlywheelPID(double kP, double kI, double kD, double kF) {
+    public NeroFlywheelPID(double kP, double kI, double kD, double kF) {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
