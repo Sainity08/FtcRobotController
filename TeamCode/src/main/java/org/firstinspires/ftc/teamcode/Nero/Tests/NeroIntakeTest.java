@@ -14,12 +14,14 @@ public class NeroIntakeTest extends OpMode {
     public Servo hardstop;
     public boolean lastButtonState = false;
     public boolean motorRunning = false;
+    public boolean lastButtonState1 = false;
+    public boolean motorRunning1 = false;
 
     @Override
     public void init() {
         leftIntake = hardwareMap.get(DcMotor.class, "left");
         rightIntake = hardwareMap.get(DcMotor.class, "right");
-        hardstop = hardwareMap.get(Servo.class, "Hardstop");
+        hardstop = hardwareMap.get(Servo.class, "hardstop");
         leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -27,6 +29,7 @@ public class NeroIntakeTest extends OpMode {
     @Override
     public void loop() {
         boolean input1 = gamepad1.left_bumper;
+        boolean input2 = gamepad1.a;
 
         if (input1 && !lastButtonState) {
             motorRunning = !motorRunning;
@@ -34,7 +37,12 @@ public class NeroIntakeTest extends OpMode {
         leftIntake.setPower(motorRunning ? 1 : 0.0);
         rightIntake.setPower(motorRunning ? 1 : 0.0);
         lastButtonState = input1;
-        telemetry.addData("Servo Position", hardstop.getPosition());
+
+        if (input2 && !lastButtonState1) {
+            motorRunning1 = !motorRunning1;
+        }
+        hardstop.setPosition(motorRunning1? 0:1);
+        lastButtonState1 = input2;
     }
 }
    
