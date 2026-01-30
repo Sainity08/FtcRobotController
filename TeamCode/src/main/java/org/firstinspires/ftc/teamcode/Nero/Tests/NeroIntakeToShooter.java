@@ -21,6 +21,9 @@ public class NeroIntakeToShooter extends OpMode {
     public DcMotorEx rightFlywheel = null;
     public boolean lastButtonState1 = false;
     public boolean motorRunning1 = false;
+
+    public boolean lastButtonState2 = false;
+    public boolean motorRunning2 = false;
     private FlywheelPID pid;
     private double targetRPM = 5000;
     private boolean upPressed = false;
@@ -31,7 +34,7 @@ public class NeroIntakeToShooter extends OpMode {
     public void init() {
         leftIntake = hardwareMap.get(DcMotor.class, "left");
         rightIntake = hardwareMap.get(DcMotor.class, "right");
-        hardstop = hardwareMap.get(Servo.class, "Hardstop");
+        hardstop = hardwareMap.get(Servo.class, "hardstop");
         leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -73,7 +76,7 @@ public class NeroIntakeToShooter extends OpMode {
             downPressed = false;
         }
 
-
+        boolean input3 = gamepad1.a;
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();
         double avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
@@ -84,6 +87,12 @@ public class NeroIntakeToShooter extends OpMode {
         leftFlywheel.setPower(pid.getPower(targetRPM, avgRPM, motorRunning1));
         rightFlywheel.setPower(pid.getPower(targetRPM, avgRPM, motorRunning1));
         lastButtonState1 = input2;
+
+        if (input3 && !lastButtonState2) {
+            motorRunning2 = !motorRunning2;
+        }
+        hardstop.setPosition(motorRunning2? 0:1);
+        lastButtonState2 = input3;
 
         telemetry.addData("Target RPM", targetRPM);
         telemetry.addData("Current RPM", avgRPM);
