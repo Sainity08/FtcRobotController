@@ -1,23 +1,25 @@
-package org.firstinspires.ftc.teamcode.Nero.Tests;
+package org.firstinspires.ftc.teamcode.Nero.Mecanisms;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp
-public class NeroIntakeTest extends OpMode {
-    public DcMotor leftIntake;
-    public DcMotor rightIntake;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+public class Intake {
+    private DcMotor leftIntake, rightIntake;
     public Servo hardstop;
     public boolean lastButtonState = false;
     public boolean motorRunning = false;
     public boolean lastButtonState1 = false;
     public boolean motorRunning1 = false;
 
-    @Override
     public void init() {
         leftIntake = hardwareMap.get(DcMotor.class, "leftI");
         rightIntake = hardwareMap.get(DcMotor.class, "rightI");
@@ -26,10 +28,8 @@ public class NeroIntakeTest extends OpMode {
         rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-    @Override
-    public void loop() {
-        boolean input1 = gamepad1.left_bumper;
-        boolean input2 = gamepad1.a;
+
+    public void intake(boolean input1, boolean input2) {
 
         if (input1 && !lastButtonState) {
             motorRunning = !motorRunning;
@@ -45,4 +45,3 @@ public class NeroIntakeTest extends OpMode {
         lastButtonState1 = input2;
     }
 }
-   

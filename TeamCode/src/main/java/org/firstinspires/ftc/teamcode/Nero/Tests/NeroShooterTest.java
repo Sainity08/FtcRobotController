@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 
@@ -12,12 +13,17 @@ import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 public class NeroShooterTest extends OpMode {
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;
+    public Servo hood;
     public boolean lastButtonState = false;
     public boolean motorRunning = false;
     private FlywheelPID pid;
     private double targetRPM = 5000;
+    private double targetHood = 0.5;
     private boolean upPressed = false;
     private boolean downPressed = false;
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
+    private final double hoodStep = .05;
     private final double rpmStep = 50;
 
     @Override
@@ -26,9 +32,10 @@ public class NeroShooterTest extends OpMode {
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "2");
         leftFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        hood = hardwareMap.get(Servo.class,"hood");
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        pid = new FlywheelPID(0.015, 0.0005, 0.005,0.7);
+        pid = new FlywheelPID(0.00075, 0, 0,0.00045);
     }
 
     @Override
@@ -50,6 +57,24 @@ public class NeroShooterTest extends OpMode {
         if (!gamepad1.dpad_down) {
             downPressed = false;
         }
+
+
+        if (gamepad1.dpad_left && !leftPressed) {
+            targetHood += hoodStep;
+            leftPressed = true;
+        }
+        if (!gamepad1.dpad_left) {
+            leftPressed = false;
+        }
+        if (gamepad1.dpad_right && !rightPressed) {
+            targetHood -= hoodStep;
+            if (targetHood < 0) targetHood = 0;
+            rightPressed = true;
+        }
+        if (!gamepad1.dpad_right) {
+            rightPressed = false;
+        }
+        hood.setPosition(targetHood);
 
 
         double leftVel = leftFlywheel.getVelocity();

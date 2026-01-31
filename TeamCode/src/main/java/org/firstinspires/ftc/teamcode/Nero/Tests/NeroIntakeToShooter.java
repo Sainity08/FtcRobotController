@@ -32,8 +32,8 @@ public class NeroIntakeToShooter extends OpMode {
 
     @Override
     public void init() {
-        leftIntake = hardwareMap.get(DcMotor.class, "left");
-        rightIntake = hardwareMap.get(DcMotor.class, "right");
+        leftIntake = hardwareMap.get(DcMotor.class, "leftI");
+        rightIntake = hardwareMap.get(DcMotor.class, "rightI");
         hardstop = hardwareMap.get(Servo.class, "hardstop");
         leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -44,7 +44,7 @@ public class NeroIntakeToShooter extends OpMode {
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        pid = new FlywheelPID(0.015, 0.0005, 0.005,0.7);
+        pid = new FlywheelPID(0.00075, 0, 0,0.00045);
     }
     @Override
     public void loop() {
