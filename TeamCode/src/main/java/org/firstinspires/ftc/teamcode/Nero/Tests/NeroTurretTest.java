@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Nero.Tests;
 
 
 import com.pedropathing.math.MathFunctions;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 
 @TeleOp
@@ -16,6 +20,7 @@ public class NeroTurretTest extends OpMode {
     public Servo LeftTurret, RightTurret;
     private double targetPosition = 0.49998;
     private boolean upPressed = false;
+    public GoBildaPinpointDriver imu;
     private boolean downPressed = false;
     private final float posStep = (1/12);
 
@@ -23,25 +28,26 @@ public class NeroTurretTest extends OpMode {
     public void init() {
         LeftTurret = hardwareMap.get(Servo.class, "leftT");
         RightTurret = hardwareMap.get(Servo.class, "rightT");
+        imu.setPosition(new Pose2D(DistanceUnit.INCH, 72,72, AngleUnit.DEGREES, 0));
     }
     @Override
     public void loop() {
         boolean input1 = gamepad1.left_bumper;
 
-        if (gamepad1.dpad_up && !upPressed) {
-            targetPosition += posStep;
-            upPressed = true;
-        }
-        if (!gamepad1.dpad_up) {
-            upPressed = false;
-        }
-        if (gamepad1.dpad_down && !downPressed) {
-            targetPosition -= posStep;
-            downPressed = true;
-        }
-        if (!gamepad1.dpad_down) {
-            downPressed = false;
-        }
+//        if (gamepad1.dpad_up && !upPressed) {
+//            targetPosition += posStep;
+//            upPressed = true;
+//        }
+//        if (!gamepad1.dpad_up) {
+//            upPressed = false;
+//        }
+//        if (gamepad1.dpad_down && !downPressed) {
+//            targetPosition -= posStep;
+//            downPressed = true;
+//        }
+//        if (!gamepad1.dpad_down) {
+//            downPressed = false;
+//        }
         if (targetPosition>1){
             targetPosition = targetPosition-1;
         }
@@ -50,14 +56,28 @@ public class NeroTurretTest extends OpMode {
             targetPosition = 1+targetPosition;
         }
 
-        double actualPosition = MathFunctions.clamp(targetPosition, 0.08333, 0.91667);
+        double targetX = 144;
+        double targetY = 144;
 
+
+        double botX = imu.getEncoderX();
+        double botY = imu.getEncoderY();
+        double botHeading = imu.getHeading(AngleUnit.DEGREES);
+
+        double turretX = botX + 3.557842126 * Math.cos(botHeading);
+        double turretY = botY + 3.557842126 * Math.sin(botHeading);
+        double targetTurretHeading = Math.atan2((targetY-turretY),(targetX-turretX));
+
+        double globalTurretHeading = (botHeading + targetTurretHeading);
+        globalTurretHeading = MathFunctions.clamp(globalTurretHeading, -150,150);
+        double actualPosition = ((globalTurretHeading + 180)/360);
+        actualPosition = MathFunctions.clamp(targetPosition, 0.08333, 0.91667);
         LeftTurret.setPosition(actualPosition);
-        LeftTurret.setPosition(actualPosition);
+        RightTurret.setPosition(actualPosition);
 
         telemetry.addData("Calculated Servo Position", targetPosition);
-        telemetry.addData("Actual Servo Position", actualPosition);
-        telemetry.addData("Turret Angle", ((360*(actualPosition))-180));
+        telemetry.addData("Actual Servo Position", actualTurretHeading);
+        telemetry.addData("Turret Angle", globalTurretHeading);
         telemetry.update();
     }
 }
