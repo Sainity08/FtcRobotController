@@ -30,6 +30,16 @@ public class NeroTurretTest extends OpMode {
         RightTurret = hardwareMap.get(Servo.class, "rightT");
         imu.setPosition(new Pose2D(DistanceUnit.INCH, 72,72, AngleUnit.DEGREES, 0));
     }
+
+    public double position_to_heading(double position) {
+        return (2 * Math.PI * position) - Math.PI;
+    }
+
+    public double heading_to_position(double heading) {
+        return (heading - Math.PI) / (2 * Math.PI);
+    }
+
+
     @Override
     public void loop() {
         boolean input1 = gamepad1.left_bumper;
@@ -59,25 +69,38 @@ public class NeroTurretTest extends OpMode {
         double targetX = 144;
         double targetY = 144;
 
-
         double botX = imu.getEncoderX();
         double botY = imu.getEncoderY();
-        double botHeading = imu.getHeading(AngleUnit.DEGREES);
+        double botHeading = imu.getHeading(AngleUnit.RADIANS);
 
         double turretX = botX + 3.557842126 * Math.cos(botHeading);
         double turretY = botY + 3.557842126 * Math.sin(botHeading);
-        double targetTurretHeading = Math.atan2((targetY-turretY),(targetX-turretX));
 
-        double globalTurretHeading = (botHeading + targetTurretHeading);
-        globalTurretHeading = MathFunctions.clamp(globalTurretHeading, -150,150);
-        double actualPosition = ((globalTurretHeading + 180)/360);
-        actualPosition = MathFunctions.clamp(targetPosition, 0.08333, 0.91667);
-        LeftTurret.setPosition(actualPosition);
-        RightTurret.setPosition(actualPosition);
+        double targetGlobalHeading = Math.atan2(targetY - turretY, targetX - turretX);
+
+        double turretRelativeHeading = targetGlobalHeading - botHeading;
+
+        turretRelativeHeading = MathFunctions.clamp(turretRelativeHeading, -Math.toRadians(150), Math.toRadians(150));
+
+        LeftTurret.setPosition(heading_to_position(turretRelativeHeading));
+        RightTurret.setPosition(heading_to_position(turretRelativeHeading));
+
+
+
+
+//        double turretHeading = position_to_heading((LeftTurret.getPosition() + RightTurret.getPosition())/2);
+//        double targetTurretHeading = Math.atan2((targetY-turretY),(targetX-turretX));
+
+//
+//        double globalTurretHeading = (botHeading + targetTurretHeading);
+//        globalTurretHeading = MathFunctions.clamp(globalTurretHeading, -150,150);
+//        double actualPosition = ((globalTurretHeading + 180)/360);
+//        actualPosition = MathFunctions.clamp(targetPosition, 0.08333, 0.91667);
+
 
         telemetry.addData("Calculated Servo Position", targetPosition);
-        telemetry.addData("Actual Servo Position", actualTurretHeading);
-        telemetry.addData("Turret Angle", globalTurretHeading);
+//        telemetry.addData("Actual Turret Heading", turretHeading);
+//        telemetry.addData("Turret Angle", globalTurretHeading);
         telemetry.update();
     }
 }
