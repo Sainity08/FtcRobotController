@@ -28,7 +28,7 @@ public class NeroTurretTest extends OpMode {
     public void init() {
         LeftTurret = hardwareMap.get(Servo.class, "leftT");
         RightTurret = hardwareMap.get(Servo.class, "rightT");
-        imu.setPosition(new Pose2D(DistanceUnit.INCH, 72,72, AngleUnit.DEGREES, 0));
+        imu.setPosition(new Pose2D(DistanceUnit.INCH, 72,72, AngleUnit.RADIANS, 0));
     }
 
     public double position_to_heading(double position) {

@@ -32,7 +32,7 @@ public class NeroIntakeToShooter extends OpMode {
     public boolean lastButtonState2 = false;
     public boolean motorRunning2 = false;
     private NeroFlywheelPIDF pid;
-    private double targetRPM = 5000;
+    private double targetRPM = 4800;
     private boolean upPressed = false;
     private boolean downPressed = false;
     private final double rpmStep = 50;
@@ -53,7 +53,7 @@ public class NeroIntakeToShooter extends OpMode {
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        pid = new NeroFlywheelPIDF(0,0,0,0);
+        pid = new NeroFlywheelPIDF(0.000005,0,0,0.0002);
     }
     @Override
     public void loop() {
@@ -115,8 +115,13 @@ public class NeroIntakeToShooter extends OpMode {
         if (input2 && !lastButtonState1) {
             motorRunning1 = !motorRunning1;
         }
-        leftFlywheel.setPower(motorRunning1? (pid.calculate(targetRPM, avgRPM)) : 0);
-        rightFlywheel.setPower(motorRunning1? (pid.calculate(targetRPM, avgRPM)) : 0);
+        double flywheelPower = (pid.calculate(targetRPM, avgRPM));
+
+        if (!motorRunning1){
+            pid.reset();
+        }
+        leftFlywheel.setPower(motorRunning1? flywheelPower : 0);
+        rightFlywheel.setPower(motorRunning1? flywheelPower : 0);
         lastButtonState1 = input2;
 
         if (input3 && !lastButtonState2) {
@@ -127,6 +132,7 @@ public class NeroIntakeToShooter extends OpMode {
 
         telemetry.addData("Target RPM", targetRPM);
         telemetry.addData("Current RPM", avgRPM);
+        telemetry.addData("Power", flywheelPower);
         telemetry.update();
     }
 }
