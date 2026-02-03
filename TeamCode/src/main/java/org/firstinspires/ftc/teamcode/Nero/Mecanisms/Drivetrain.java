@@ -18,8 +18,8 @@ public class Drivetrain {
         frontRightMotor = hwMap.get(DcMotor.class, "rightFront");
         backRightMotor = hwMap.get(DcMotor.class, "rightBack");
 
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -41,10 +41,10 @@ public class Drivetrain {
         double cos = Math.cos(theta - Math.PI/4);
         double max = Math.max(Math.abs(sin),Math.abs(cos));
 
-        double leftFront = power * cos/max + turn;
-        double rightFront = power * sin/max - turn;
-        double leftRear = power * sin/max + turn;
-        double rightRear = power * cos/max - turn;
+        double leftFront = power * cos/max - turn;
+        double rightFront = power * sin/max + turn;
+        double leftRear = power * sin/max - turn;
+        double rightRear = power * cos/max + turn;
 
         if ((power + Math.abs(turn)) > 1){
             leftFront /= power + Math.abs(turn);

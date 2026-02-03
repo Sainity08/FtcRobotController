@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 
 @TeleOp
@@ -21,6 +22,7 @@ public class NeroIntakeToShooter extends OpMode {
     public DcMotorEx rightFlywheel = null;
     public boolean lastButtonState1 = false;
     public boolean motorRunning1 = false;
+    Drivetrain drive = new Drivetrain();
 
     public boolean lastButtonState2 = false;
     public boolean motorRunning2 = false;
@@ -35,6 +37,7 @@ public class NeroIntakeToShooter extends OpMode {
         leftIntake = hardwareMap.get(DcMotor.class, "leftI");
         rightIntake = hardwareMap.get(DcMotor.class, "rightI");
         hardstop = hardwareMap.get(Servo.class, "hardstop");
+        drive.init(hardwareMap);
         leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         rightIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -44,11 +47,15 @@ public class NeroIntakeToShooter extends OpMode {
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        pid = new FlywheelPID(0.00075, 0, 0,0.00045);
+        pid = new FlywheelPID(0, 0, 0,0);
     }
     @Override
     public void loop() {
         boolean input1 = gamepad1.left_bumper;
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_x;
+        double turn = gamepad1.right_stick_x;
+        drive.driveRobotRelative(y, x, turn);
 
         if (input1 && !lastButtonState) {
             motorRunning = !motorRunning;

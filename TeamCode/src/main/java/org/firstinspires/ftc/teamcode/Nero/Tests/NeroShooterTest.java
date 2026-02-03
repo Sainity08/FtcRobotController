@@ -35,7 +35,7 @@ public class NeroShooterTest extends OpMode {
         hood = hardwareMap.get(Servo.class,"hood");
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        pid = new FlywheelPID(0.00075, 0, 0,0.00045);
+        pid = new FlywheelPID(0, 0, 0.001,0);
     }
 
     @Override
@@ -84,8 +84,8 @@ public class NeroShooterTest extends OpMode {
         if (input1 && !lastButtonState) {
             motorRunning = !motorRunning;
         }
-        leftFlywheel.setPower(pid.getPower(targetRPM, avgRPM, motorRunning));
-        rightFlywheel.setPower(pid.getPower(targetRPM, avgRPM, motorRunning));
+        leftFlywheel.setPower(pid.calculate(targetRPM, avgRPM, 0.02));
+        rightFlywheel.setPower(pid.calculate(targetRPM, avgRPM, 0.02));
         lastButtonState = input1;
 
         telemetry.addData("Target RPM", targetRPM);
