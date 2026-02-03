@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
 @TeleOp
 public class NeroTurretTest extends OpMode {
     public Servo LeftTurret, RightTurret;
-    private double targetPostion = .5;
+    private double targetPosition = 0.49998;
     private boolean upPressed = false;
     private boolean downPressed = false;
-    private final double posStep = .05;
+    private final float posStep = (1/12);
 
     @Override
     public void init() {
@@ -29,32 +29,35 @@ public class NeroTurretTest extends OpMode {
         boolean input1 = gamepad1.left_bumper;
 
         if (gamepad1.dpad_up && !upPressed) {
-            targetPostion += posStep;
+            targetPosition += posStep;
             upPressed = true;
         }
         if (!gamepad1.dpad_up) {
             upPressed = false;
         }
         if (gamepad1.dpad_down && !downPressed) {
-            targetPostion -= posStep;
+            targetPosition -= posStep;
             downPressed = true;
         }
         if (!gamepad1.dpad_down) {
             downPressed = false;
         }
-        if (targetPostion>1){
-            targetPostion = targetPostion-1;
+        if (targetPosition>1){
+            targetPosition = targetPosition-1;
         }
 
-        if (targetPostion<0){
-            targetPostion = 1+targetPostion;
+        if (targetPosition<0){
+            targetPosition = 1+targetPosition;
         }
 
-        LeftTurret.setPosition(targetPostion);
-        LeftTurret.setPosition(targetPostion);
+        double actualPosition = MathFunctions.clamp(targetPosition, 0.08333, 0.91667);
 
-        telemetry.addData("Turret Servo Postion", targetPostion);
-        telemetry.addData("Turret Angle", ((360*(targetPostion))-180));
+        LeftTurret.setPosition(actualPosition);
+        LeftTurret.setPosition(actualPosition);
+
+        telemetry.addData("Calculated Servo Position", targetPosition);
+        telemetry.addData("Actual Servo Position", actualPosition);
+        telemetry.addData("Turret Angle", ((360*(actualPosition))-180));
         telemetry.update();
     }
 }
