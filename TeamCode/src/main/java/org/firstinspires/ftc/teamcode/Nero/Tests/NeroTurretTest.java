@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Nero.Tests;
 
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.MathFunctions;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -13,22 +15,30 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
 import org.firstinspires.ftc.teamcode.PID.FlywheelPID;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @TeleOp
 public class NeroTurretTest extends OpMode {
     public Servo LeftTurret, RightTurret;
-    private double targetPosition = 0.49998;
     private boolean upPressed = false;
-    public GoBildaPinpointDriver imu;
     private boolean downPressed = false;
     private final float posStep = (1/12);
+    private Follower follower;
+    Drivetrain drive = new Drivetrain();
+    Turret turret = new Turret();
+    private final Pose startPose = new Pose(72, 72, (Math.toRadians(0)));
 
     @Override
     public void init() {
-        LeftTurret = hardwareMap.get(Servo.class, "leftT");
-        RightTurret = hardwareMap.get(Servo.class, "rightT");
-        imu.setPosition(new Pose2D(DistanceUnit.INCH, 72,72, AngleUnit.RADIANS, 0));
+        follower = Constants.createFollower(hardwareMap);
+        follower.setStartingPose(startPose);
+        turret.init(hardwareMap);
+        drive.init(hardwareMap);
+
     }
 
     public double position_to_heading(double position) {
@@ -36,13 +46,19 @@ public class NeroTurretTest extends OpMode {
     }
 
     public double heading_to_position(double heading) {
-        return (heading - Math.PI) / (2 * Math.PI);
+        return (heading + Math.PI) / (2 * Math.PI);
     }
 
 
     @Override
     public void loop() {
         boolean input1 = gamepad1.left_bumper;
+
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_x;
+        double turn = gamepad1.right_stick_x;
+
+        drive.driveRobotRelative(y, x, turn);
 
 //        if (gamepad1.dpad_up && !upPressed) {
 //            targetPosition += posStep;
@@ -58,33 +74,38 @@ public class NeroTurretTest extends OpMode {
 //        if (!gamepad1.dpad_down) {
 //            downPressed = false;
 //        }
-        if (targetPosition>1){
-            targetPosition = targetPosition-1;
-        }
 
-        if (targetPosition<0){
-            targetPosition = 1+targetPosition;
-        }
 
-        double targetX = 144;
-        double targetY = 144;
-
-        double botX = imu.getEncoderX();
-        double botY = imu.getEncoderY();
-        double botHeading = imu.getHeading(AngleUnit.RADIANS);
-
-        double turretX = botX + 3.557842126 * Math.cos(botHeading);
-        double turretY = botY + 3.557842126 * Math.sin(botHeading);
-
-        double targetGlobalHeading = Math.atan2(targetY - turretY, targetX - turretX);
-
-        double turretRelativeHeading = targetGlobalHeading - botHeading;
-
-        turretRelativeHeading = MathFunctions.clamp(turretRelativeHeading, -Math.toRadians(150), Math.toRadians(150));
-
-        LeftTurret.setPosition(heading_to_position(turretRelativeHeading));
-        RightTurret.setPosition(heading_to_position(turretRelativeHeading));
-
+//        double targetX = 144;
+//        double targetY = 144;
+//
+//        double botX = follower.getPose().getX();
+//        double botY = follower.getPose().getY();
+//        double botHeading = follower.getPose().getHeading();
+//
+//        double turretX = botX + 3.557842126 * Math.cos(botHeading);
+//        double turretY = botY + 3.557842126 * Math.sin(botHeading);
+//
+//        double targetGlobalHeading = Math.atan2(targetY - turretY, targetX - turretX);
+//
+//        double turretRelativeHeading = targetGlobalHeading - botHeading;
+//
+//        turretRelativeHeading = MathFunctions.clamp(turretRelativeHeading, -Math.toRadians(149), Math.toRadians(149));
+//
+//        double targetPosition = heading_to_position(turretRelativeHeading);
+//
+//        if (targetPosition>1){
+//            targetPosition = targetPosition-1;
+//        }
+//
+//        if (targetPosition<0){
+//            targetPosition = 1+targetPosition;
+//        }
+//        targetPosition = MathFunctions.clamp(targetPosition, 0.0813, 0.916);
+//
+//        LeftTurret.setPosition(targetPosition);
+//        RightTurret.setPosition(targetPosition);
+//
 
 
 
@@ -97,10 +118,20 @@ public class NeroTurretTest extends OpMode {
 //        double actualPosition = ((globalTurretHeading + 180)/360);
 //        actualPosition = MathFunctions.clamp(targetPosition, 0.08333, 0.91667);
 
+//
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", follower.getPose().getHeading());
+//        telemetry.addData("servo position", targetPosition);
+////        telemetry.addData("Actual Turret Heading", turretHeading);
+////        telemetry.addData("Turret Angle", globalTurretHeading);
+//        telemetry.update();
 
-        telemetry.addData("Calculated Servo Position", targetPosition);
-//        telemetry.addData("Actual Turret Heading", turretHeading);
-//        telemetry.addData("Turret Angle", globalTurretHeading);
-        telemetry.update();
+        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.redGoalX,turret.redGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), true);
+        follower.update();
+        double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.redGoalX,turret.redGoalY);
+        turret.FFturret(follower.getHeading());
+        telemetry.addData("distance", distance);
+
     }
 }
