@@ -45,16 +45,21 @@ public class NeroIntakeTest extends OpMode {
         lastButtonState1 = input2;
     }
 
-    public double exponentialDecay(double elapsedTime, double startingPower, double finalPower, double timeInterval, double decaySpeed) {
+    public double exponentialDecay(double elapsedTime,
+                                   double startingPower,
+                                   double finalPower,
+                                   double timeInterval,
+                                   double decaySpeed)
+    {
         double normalizedTime = elapsedTime / timeInterval;
         return finalPower - (startingPower - finalPower) *
-                (Math.exp(Math.pow(normalizedTime, elapsedTime)) - Math.exp(-1)) /
+                (Math.exp(Math.pow(normalizedTime, decaySpeed)) - Math.exp(-1)) /
                 (1 - Math.exp(-1));
     }
     /**
      * default parameters
      */
-    public double exponential_decay(double elapsedTime) {
+    public double exponentialDecay(double elapsedTime) {
         return exponentialDecay(elapsedTime, 1, 0, 3000, 4);
     }
 }
