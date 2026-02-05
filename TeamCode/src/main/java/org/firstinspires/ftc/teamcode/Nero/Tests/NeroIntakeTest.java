@@ -44,5 +44,12 @@ public class NeroIntakeTest extends OpMode {
         hardstop.setPosition(motorRunning1? 0:1);
         lastButtonState1 = input2;
     }
+
+    public double exponential_decay(double startingPower, double finalPower, double timeInterval, double decaySpeed, double elapsedTime) {
+        double normalizedTime = elapsedTime / timeInterval;
+        return finalPower - (startingPower - finalPower) *
+                (Math.exp(Math.pow(normalizedTime, elapsedTime)) - Math.exp(-1)) /
+                (1 - Math.exp(-1));
+    }
 }
    
