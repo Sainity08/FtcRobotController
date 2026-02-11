@@ -22,6 +22,7 @@ import com.pedropathing.math.*;
 import com.pedropathing.paths.*;
 import com.pedropathing.telemetry.SelectableOpMode;
 import com.pedropathing.util.*;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -39,6 +40,7 @@ import java.util.List;
 public class Tuning extends SelectableOpMode {
     public static Follower follower;
 
+
     @IgnoreConfigurable
     static PoseHistory poseHistory;
 
@@ -47,6 +49,8 @@ public class Tuning extends SelectableOpMode {
 
     @IgnoreConfigurable
     static ArrayList<String> changes = new ArrayList<>();
+
+
 
     public Tuning() {
         super("Select a Tuning OpMode", s -> {
@@ -812,6 +816,7 @@ class TranslationalTuner extends OpMode {
 class HeadingTuner extends OpMode {
     public static double DISTANCE = 40;
     private boolean forward = true;
+    private GoBildaPinpointDriver odom;
 
     private Path forwards;
     private Path backwards;
@@ -819,6 +824,8 @@ class HeadingTuner extends OpMode {
     @Override
     public void init() {
         follower.setStartingPose(new Pose(72, 72));
+        odom = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+        odom.recalibrateIMU();
     }
 
     /**
@@ -832,6 +839,7 @@ class HeadingTuner extends OpMode {
         telemetryM.debug("You can adjust the PIDF values to tune the robot's heading PIDF(s).");
         telemetryM.update(telemetry);
         follower.update();
+        odom.recalibrateIMU();
         drawOnlyCurrent();
     }
 
@@ -844,6 +852,7 @@ class HeadingTuner extends OpMode {
         backwards = new Path(new BezierLine(new Pose(DISTANCE + 72,72), new Pose(72,72)));
         backwards.setConstantHeadingInterpolation(0);
         follower.followPath(forwards);
+        odom.recalibrateIMU();
     }
 
     /**
@@ -1036,6 +1045,7 @@ class CentripetalTuner extends OpMode {
 
     private Path forwards;
     private Path backwards;
+    private GoBildaPinpointDriver odom;
 
     @Override
     public void init() {

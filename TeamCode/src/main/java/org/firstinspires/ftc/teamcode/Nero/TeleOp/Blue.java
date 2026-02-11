@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.Nero.TeleOp;
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawOnlyCurrent;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
-
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -23,7 +19,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
 @TeleOp
-public class Red extends OpMode {
+public class Blue extends OpMode {
     Drivetrain drive = new Drivetrain();
     Intake intake = new Intake();
     NeroFlywheelPIDF pid;
@@ -51,7 +47,7 @@ public class Red extends OpMode {
         follower.setStartingPose(startPose);
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         odom = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-        limelight.pipelineSwitch(1);
+        limelight.pipelineSwitch(2);
         limelight.start();
         odom.recalibrateIMU();
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "1");

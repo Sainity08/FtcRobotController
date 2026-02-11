@@ -21,6 +21,8 @@ public class Intake {
     public boolean motorRunning1 = false;
     public boolean lastButtonState2 = false;
     public boolean motorRunning2 = false;
+    public double intakePower;
+    private double hardstopPos;
 
     public void init(HardwareMap hwMap) {
         leftIntake = hwMap.get(DcMotor.class, "leftI");
@@ -31,36 +33,68 @@ public class Intake {
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void intake(boolean input1) {
+    public void intake(boolean intake, boolean outtake, boolean scoring) {
 
-        if (input1 && !lastButtonState) {
+        if (intake && !lastButtonState) {
             motorRunning = !motorRunning;
         }
-        leftIntake.setPower(motorRunning ? 1 : 0.0);
-        rightIntake.setPower(motorRunning ? 1 : 0.0);
-        lastButtonState = input1;
+        lastButtonState = intake;
+
         if(motorRunning){
-            hardstop.setPosition(0);
+            intakePower = 1;
+            hardstopPos = 1;
+        } else{
+            if(outtake){
+                intakePower = -.5;
+                hardstopPos = 1;
+            } else {
+                if(scoring){
+                    intakePower = 0.75;
+                    hardstopPos = 0;
+                } else{
+                    intakePower = 0;
+                }
+            }
         }
+
+        leftIntake.setPower(intakePower);
+        rightIntake.setPower(intakePower);
+        hardstop.setPosition(hardstopPos);
     }
 
-    public void intakeShoot(boolean input2){
-        if (input2 && !lastButtonState1) {
-            motorRunning1 = !motorRunning1;
+    public void autonIntake(boolean intake, boolean outtake, boolean scoring) {
+
+        if(intake){
+            intakePower = 1;
+            hardstopPos = 1;
+        } else{
+            if(outtake){
+                intakePower = -.5;
+                hardstopPos = 1;
+            } else {
+                if(scoring){
+                    intakePower = 0.75;
+                    hardstopPos = 0;
+                } else{
+                    intakePower = 0;
+                }
+            }
         }
-        hardstop.setPosition(motorRunning1? 0:1);
-        leftIntake.setPower(motorRunning1 ? 0.8 : 0.0);
-        rightIntake.setPower(motorRunning1 ? 0.8 : 0.0);
-        lastButtonState1 = input2;
+
+        leftIntake.setPower(intakePower);
+        rightIntake.setPower(intakePower);
+        hardstop.setPosition(hardstopPos);
     }
 
-    public void outtake(boolean input3){
-        if (input3 && !lastButtonState2) {
-            motorRunning2 = !motorRunning2;
-        }
-        leftIntake.setPower(motorRunning2 ? -.5 : 0.0);
-        rightIntake.setPower(motorRunning2 ? -.5 : 0.0);
-        lastButtonState2 = input3;
-    }
+//    public void intakeShoot(boolean input2){
+//        hardstop.setPosition(input2? 0:1);
+//        leftIntake.setPower(input2 ? 0.8 : 0.0);
+//        rightIntake.setPower(input2 ? 0.8 : 0.0);
+//    }
+//
+//    public void outtake(boolean input3) {
+//        leftIntake.setPower(input3 ? -.5 : 0.0);
+//        rightIntake.setPower(input3 ? -.5 : 0.0);
+//    }
 
 }

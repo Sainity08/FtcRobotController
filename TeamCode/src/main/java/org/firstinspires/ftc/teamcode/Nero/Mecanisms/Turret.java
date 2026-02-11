@@ -13,11 +13,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class Turret {
 
     // Goals
-    public double blueGoalX = 0;
-    public double blueGoalY = 144;
-    public double redGoalX  = 144;
-    public double redGoalY  = 144;
+    public double blueGoalX = -66;
+    public double blueGoalY = 66;
+    public double redGoalX  = 66;
+    public double redGoalY  = 66;
+    public double angle;
+
     public double[] goal;
+
 //    // Goals
 //    public double SblueGoalX = -66;
 //    public double SblueGoalY = 66;
@@ -54,7 +57,7 @@ public class Turret {
 
     public double fieldAngle;
 
-    public double ballFlightTime;
+    public double ballFlightTime = .7;
 
     public ElapsedTime angularVeloTime = new ElapsedTime();
 
@@ -92,7 +95,7 @@ public class Turret {
     private double lastAngle2 = 0, totalAngle2 = 0;
 
     // FF
-    public  double TURRET_FF_GAIN = .1; // start at 1.0
+    public  double TURRET_FF_GAIN = .04;
 
     public double turretFeedForwardServo = 0;
 
@@ -116,7 +119,7 @@ public class Turret {
         // Field angle to target
         fieldAngle = Math.toDegrees(Math.atan2(dy, dx));
 
-        double angle = fieldAngle - robotHeading; //210
+        angle = fieldAngle - robotHeading; //210
 
         if (angle < 0) angle += 360;
         if (angle > 360) angle -= 360;                        // [0,360)
@@ -129,9 +132,9 @@ public class Turret {
         ballFlightTime = distance * .01;        // need to figure out regression line
     }
 
-    private double getRawAngle(AnalogInput analog) {
-        return (analog.getVoltage() / ANALOG_MAX_VOLTAGE) * SERVO_RANGE_DEG;
-    }
+//    private double getRawAngle(AnalogInput analog) {
+//        return (analog.getVoltage() / ANALOG_MAX_VOLTAGE) * SERVO_RANGE_DEG;
+//    }
 
 
 
@@ -141,16 +144,16 @@ public class Turret {
 
 
     private double clampTurretTarget(double target) {
-        return Math.max(0.025, Math.min(.975, target));
+        return Math.max(.025, Math.min(.975, target));
     }
 
     public double turretpositionX(double robotX, double robotY, double robotHeading) {
-        double offset = 1.25; // inches from back of robot
+        double offset = 3.1; // inches from back of robot
         return robotX - offset * Math.cos(robotHeading);
     }
 
     public double turretpositionY(double robotX, double robotY, double robotHeading) {
-        double offset = 1.25; // inches from back of robot
+        double offset = 0; // inches from back of robot
         return robotY - offset * Math.sin(robotHeading);
     }
 
@@ -159,7 +162,8 @@ public class Turret {
             double turretY,
             double robotVectorX,
             double robotVectorY,
-            boolean isRed
+            boolean isRed,
+            boolean SOTM
     ) {
         // Select correct goal
         double goalX = isRed ? redGoalX : blueGoalX;
@@ -170,17 +174,17 @@ public class Turret {
         double dy = goalY - turretY;
         double distance = Math.hypot(dx, dy);
 
-        // Time of flight approximation
-        double time = distance / ballFlightTime;
-
         // Lead compensation (move goal opposite robot motion)
-        double leadX = robotVectorX * time;
-        double leadY = robotVectorY * time;
+        double leadX = robotVectorX * ballFlightTime;
+        double leadY = robotVectorY * ballFlightTime;
 
         double compensatedGoalX = goalX - leadX;
         double compensatedGoalY = goalY - leadY;
+        if(SOTM) {
+            return new double[]{compensatedGoalX, compensatedGoalY};
+        } else
+            return new double[]{goalX, goalY};
 
-        return new double[]{compensatedGoalX, compensatedGoalY};
     }
 
     public double AngularVelocity(double robotHeading) {
@@ -213,19 +217,21 @@ public class Turret {
             double goalY,
             double robotVectX,
             double robotVectY,
-            boolean isRed
+            boolean isRed,
+            boolean SOTM
     ) {
         goal = shootOnTheMove(
                 turretpositionX(robotX, robotY, robotHeading),
                 turretpositionY(robotX, robotY, robotHeading),
                 robotVectX,
                 robotVectY,
-                isRed
+                isRed,
+                SOTM
         );
 
-        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1]) + turretFeedForwardServo;
+        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1]);
 //        FFturret(robotHeading);
-        turretAngle = MathFunctions.clamp(turretAngle,0.0833333333333,0.916666666667);
+        turretAngle = MathFunctions.clamp(turretAngle,.025,.975);
 
 
 //        analogangle = (((turretAnalog.getVoltage() / 3.3)* 450)-45);
@@ -244,7 +250,7 @@ public class Turret {
 //            turretServoBack.setPosition(.5);
 //            turretServos.set(.1);
         } else {
-            turretServoFront.setPosition(.5);
+            turretServoFront.setPosition(0.5);
             turretServoBack.setPosition(.5);
         }
     }
