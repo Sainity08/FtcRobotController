@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous
+@Autonomous(name = "Red 12 Ball")
 public class Red12 extends OpMode {
     private double distance = 31.1126983722;
 
@@ -358,7 +358,7 @@ public class Red12 extends OpMode {
 
         double targetRPM = shooter.RPM(30);
         intake.autonIntake(intaking, false, scoring);
-        double hoodPos = shooter.hood(26, true);
+        shooter.hood(26);
         double flywheel = pid.calculate(3200, shooter.avgRPM);
         leftFlywheel.setPower(flywheel);
         rightFlywheel.setPower(flywheel);

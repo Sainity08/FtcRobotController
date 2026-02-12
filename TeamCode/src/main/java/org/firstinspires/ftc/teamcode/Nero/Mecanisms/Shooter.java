@@ -27,7 +27,7 @@ public class Shooter {
     double turn;
     private boolean leftPressed = false;
     private boolean rightPressed = false;
-    private final double hoodStep = .05;
+    private final double hoodStep = .01;
     public double avgRPM;
     private boolean autoAim = false;
     private boolean xWasPressed = false;
@@ -42,7 +42,7 @@ public class Shooter {
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        pid = new NeroFlywheelPIDF(0.000005,0,0,0.0002);
+        pid = new NeroFlywheelPIDF(0.0000001,0.0000001,0.000010,0.000195);
 
     }
 
@@ -64,8 +64,7 @@ public class Shooter {
         speed = MathFunctions.clamp(speed,3600,4800);
         return speed;
     }
-    public double hood(double distance, boolean isValid){
-        if(isValid) {
+    public double hood(double distance){
             if (distance > 35 && distance < 80) {
                 hoodPos = 0.25;
             } else {
@@ -73,9 +72,6 @@ public class Shooter {
                     hoodPos = -0.693+0.0445*(distance)+-0.0005*(Math.pow(distance, 2));
                 }
             }
-        } else {
-            hoodPos = 0.25;
-        }
 
         hoodPos = MathFunctions.clamp(hoodPos,0,1);
         return hoodPos;
@@ -157,7 +153,7 @@ public class Shooter {
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();
         avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
-        flywheelPower = (pid.calculate(speed, avgRPM));
+        flywheelPower = (pid.calculate(targetRPM, avgRPM));
         if (input && !lastButtonState) {
             motorRunning = !motorRunning;
         }
@@ -166,8 +162,12 @@ public class Shooter {
         }
         leftFlywheel.setPower(motorRunning? 0 : flywheelPower);
         rightFlywheel.setPower(motorRunning? 0 : flywheelPower);
-        hood.setPosition(motorRunning? 0.25 : hoodPos);
+        hood.setPosition(targetHood);
         lastButtonState = input;
+
+        if(!motorRunning){
+            pid.reset();
+        }
 
 
     }

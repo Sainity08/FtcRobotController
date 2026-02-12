@@ -13,11 +13,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class Turret {
 
     // Goals
-    public double blueGoalX = -66;
-    public double blueGoalY = 66;
-    public double redGoalX  = 66;
-    public double redGoalY  = 66;
+//    public double blueGoalX = -66;
+//    public double blueGoalY = 66;
+//    public double redGoalX  = 66;
+//    public double redGoalY  = 66;
+    public double blueGoalX = 6;
+    public double blueGoalY = 138;
+    public double redGoalX  = 138;
+    public double redGoalY  = 138;
     public double angle;
+    public double omega;
 
     public double[] goal;
 
@@ -95,7 +100,7 @@ public class Turret {
     private double lastAngle2 = 0, totalAngle2 = 0;
 
     // FF
-    public  double TURRET_FF_GAIN = .04;
+    public  double TURRET_FF_GAIN = .001;
 
     public double turretFeedForwardServo = 0;
 
@@ -144,7 +149,7 @@ public class Turret {
 
 
     private double clampTurretTarget(double target) {
-        return Math.max(.025, Math.min(.975, target));
+        return Math.max(0.0813, Math.min(.917, target));
     }
 
     public double turretpositionX(double robotX, double robotY, double robotHeading) {
@@ -201,12 +206,6 @@ public class Turret {
         return deltaHeading/deltaTime;
     }
 
-    public void FFturret(double robotHeading){
-        double omega = AngularVelocity(robotHeading);
-        turretFeedForwardServo =  (-omega * TURRET_FF_GAIN) / 360.0;
-    }
-
-
 
 
     public void update(
@@ -228,10 +227,12 @@ public class Turret {
                 isRed,
                 SOTM
         );
-
-        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1]);
+        omega = AngularVelocity(robotHeading);
+        turretFeedForwardServo =  (-omega * TURRET_FF_GAIN) / 360.0;
+        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1])+turretFeedForwardServo;
 //        FFturret(robotHeading);
-        turretAngle = MathFunctions.clamp(turretAngle,.025,.975);
+        turretAngle = MathFunctions.clamp(turretAngle,0.0813,.917);
+
 
 
 //        analogangle = (((turretAnalog.getVoltage() / 3.3)* 450)-45);

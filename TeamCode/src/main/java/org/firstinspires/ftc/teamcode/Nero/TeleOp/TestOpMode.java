@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
@@ -18,8 +17,8 @@ import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
-@TeleOp
-public class Blue extends OpMode {
+@TeleOp(name = "Test")
+public class TestOpMode extends OpMode {
     Drivetrain drive = new Drivetrain();
     Intake intake = new Intake();
     NeroFlywheelPIDF pid;
@@ -35,24 +34,27 @@ public class Blue extends OpMode {
     public Servo hood;
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;
+    //Pedro
     private final Pose startPose = new Pose(72, 72, (Math.toRadians(0)));
+
+    //Roadrunner
+//    private final Pose startPose = new Pose(0, 0, (Math.toRadians(0)));
     @Override
     public void init() {
         drive.init(hardwareMap);
         intake.init(hardwareMap);
-        turretServoFront = hardwareMap.get(Servo.class,"leftT");
-        turretServoBack = hardwareMap.get(Servo.class,"rightT");
+        turret.init(hardwareMap);
         shooter.init(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        odom = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-        limelight.pipelineSwitch(2);
+        limelight.pipelineSwitch(1);
         limelight.start();
-        odom.recalibrateIMU();
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "1");
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "2");
         hood = hardwareMap.get(Servo.class,"hood");
+        odom = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+        odom.recalibrateIMU();
         leftFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
@@ -86,35 +88,36 @@ public class Blue extends OpMode {
 
         //Intake Commands
         boolean input3 = gamepad1.left_trigger > 0.3;
-        intake.intake(gamepad1.left_bumper, gamepad1.right_bumper, input3);
+        boolean input4 = gamepad1.right_trigger > 0.3;
+        double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.blueGoalX,turret.blueGoalY);
+        intake.intake(gamepad1.left_bumper, gamepad1.right_bumper, input3, input4, distance);
 
         //Manual Adjustment
         shooter.setRPM(gamepad1.dpad_up, gamepad1.dpad_down);
         shooter.setHood(gamepad1.dpad_left, gamepad1.dpad_right);
-        shooter.RPM(shooter.tyDistance(ty));
-        shooter.hood(shooter.tyDistance(ty), autoAim);
         shooter.ShooterGo(gamepad1.y);
         //Lock Turret
-        turretServoFront.setPosition(0.5);
-        turretServoBack.setPosition(0.5);
+        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false);
 
-//        double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.redGoalX,turret.redGoalY);
 
 
         follower.update();
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("Distance", distance);
         telemetry.addData("RPM", shooter.targetRPM);
         telemetry.addData("Current RPM", shooter.avgRPM);
-        telemetry.addData("hood", shooter.targetHood);
-        telemetry.addData("Yaw", odom.getYawScalar());
-        telemetry.addData("heading from odom",  odom.getHeading(AngleUnit.DEGREES));
-        telemetry.addData("tx", limelight.getLatestResult().getTx());
-        telemetry.addData("ty", limelight.getLatestResult().getTy());
-        telemetry.addData("distance calculated", shooter.tyDistance(ty));
-        telemetry.addData("has Target?", limelight.getLatestResult().isValid());
-        telemetry.addData("Calculated RPM", shooter.RPM(shooter.tyDistance(ty)));
-        telemetry.addData("Calculated Hood", shooter.hood(shooter.tyDistance(ty), limelight.getLatestResult().isValid()));
+        telemetry.addData("Hood", shooter.targetHood);
+        telemetry.addLine("-------------------------------------------");
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("Heading", follower.getPose().getHeading());
+        telemetry.addLine("-------------------------------------------");
+        telemetry.addData("Angular Velocity", turret.omega);
+        telemetry.addData("Feedforward", turret.turretFeedForwardServo);
+        telemetry.addLine("-------------------------------------------");
+        telemetry.addData("Intake power wants to be", intake.intakePower);
+        telemetry.addData("Intake power is", intake.actualPower);
+        telemetry.addData("can index?", intake.canIntake);
+        telemetry.addLine("-------------------------------------------");
+
     }
 }

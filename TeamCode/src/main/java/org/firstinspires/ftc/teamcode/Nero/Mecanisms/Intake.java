@@ -21,7 +21,11 @@ public class Intake {
     public boolean motorRunning1 = false;
     public boolean lastButtonState2 = false;
     public boolean motorRunning2 = false;
+    Shooter shooter = new Shooter();
+    private double bounds = 50;
     public double intakePower;
+    public double actualPower;
+    public boolean canIntake;
     private double hardstopPos;
 
     public void init(HardwareMap hwMap) {
@@ -33,26 +37,32 @@ public class Intake {
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void intake(boolean intake, boolean outtake, boolean scoring) {
+    public void intake(boolean intake, boolean outtake, boolean scoring, boolean back, double distance) {
 
         if (intake && !lastButtonState) {
             motorRunning = !motorRunning;
         }
         lastButtonState = intake;
 
-        if(motorRunning){
+        if (motorRunning) {
             intakePower = 1;
             hardstopPos = 1;
-        } else{
-            if(outtake){
+        } else {
+            if (outtake) {
                 intakePower = -.5;
                 hardstopPos = 1;
             } else {
-                if(scoring){
+                if (scoring && shooter.avgRPM < (shooter.targetRPM + bounds) && shooter.avgRPM > (shooter.targetRPM - bounds)) {
                     intakePower = 0.75;
                     hardstopPos = 0;
-                } else{
-                    intakePower = 0;
+
+                } else {
+                    if (back) {
+                        intakePower = 1;
+                        hardstopPos = 0;
+                    } else {
+                        intakePower = 0;
+                    }
                 }
             }
         }
@@ -60,6 +70,8 @@ public class Intake {
         leftIntake.setPower(intakePower);
         rightIntake.setPower(intakePower);
         hardstop.setPosition(hardstopPos);
+        actualPower = (((leftIntake.getPower()) + rightIntake.getPower()) / 2);
+        canIntake = (shooter.avgRPM < (shooter.targetRPM + bounds) && shooter.avgRPM > (shooter.targetRPM - bounds));
     }
 
     public void autonIntake(boolean intake, boolean outtake, boolean scoring) {
@@ -75,7 +87,8 @@ public class Intake {
                 if(scoring){
                     intakePower = 0.75;
                     hardstopPos = 0;
-                } else{
+                }
+                else{
                     intakePower = 0;
                 }
             }
