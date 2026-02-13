@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.SavePose;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -45,6 +46,7 @@ public class Blue12 extends OpMode {
     private final Pose startPose = new Pose(34, 136.000, Math.toRadians(270));
     private Follower follower;
     double shootAngle = 315;
+    SavePose fileManager = new SavePose();
 
     public void buildPaths() {
         Path1 = follower.pathBuilder().addPath(
@@ -356,10 +358,10 @@ public class Blue12 extends OpMode {
         telemetry.addData("shooter time", ShooterTimer.seconds());
         telemetry.addData("rpm", shooter.avgRPM);
 
-        double targetRPM = shooter.RPM(30);
+        double targetRPM = shooter.RPM(48.9182992345);
         intake.autonIntake(intaking, false, scoring);
-        double hoodPos = shooter.hood(26);
-        double flywheel = pid.calculate(3200, shooter.avgRPM);
+        double hoodPos = shooter.hood(48.9182992345);
+        double flywheel = pid.calculate(targetRPM, shooter.avgRPM);
         leftFlywheel.setPower(flywheel);
         rightFlywheel.setPower(flywheel);
         hood.setPosition(0);
@@ -391,5 +393,10 @@ public class Blue12 extends OpMode {
         shooter.init(hardwareMap);
         leftT = hardwareMap.get(Servo.class, "leftT");
         rightT = hardwareMap.get(Servo.class, "rightT");
+        fileManager.init();
+    }
+    @Override
+    public void stop() {
+        fileManager.FileWrite(follower.getPose().getX(),follower.getPose().getY(),follower.getHeading());
     }
 }

@@ -229,7 +229,7 @@ public class Turret {
         );
         omega = AngularVelocity(robotHeading);
         turretFeedForwardServo =  (-omega * TURRET_FF_GAIN) / 360.0;
-        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1])+turretFeedForwardServo;
+        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1])-turretFeedForwardServo;
 //        FFturret(robotHeading);
         turretAngle = MathFunctions.clamp(turretAngle,0.0813,.917);
 

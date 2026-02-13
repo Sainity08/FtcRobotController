@@ -47,29 +47,31 @@ public class Shooter {
     }
 
     public double RPM(double distance){
-            if (distance > 35 && distance < 80) {
-             speed = (-365 - 12.041594578792
-                    + 298 * distance
-                    - 8.76 * Math.pow(distance, 2)
-                    + 0.12 * Math.pow(distance, 3)
-                    - 0.000587 * Math.pow(distance, 4));
-        } else {
-            if(distance < 35) {
-                speed = 3600;
+        if(distance > 71 && distance < 128){
+            speed = -307 + 78.7 * distance - 0.297 * Math.pow(distance, 2);
+        }else {
+            if(distance < 50){
+                speed = 3775;
             }
-            if(distance > 80){
-                speed = 4800;
+            if (distance < 71 && distance > 50) {
+                speed = 3850;
+            }
+            if (distance > 128){
+                speed = 4900;
             }
         }
-        speed = MathFunctions.clamp(speed,3600,4800);
+        speed = MathFunctions.clamp(speed,0,4900);
         return speed;
     }
     public double hood(double distance){
-            if (distance > 35 && distance < 80) {
-                hoodPos = 0.25;
+            if (distance > 34 && distance < 80) {
+                hoodPos = -1.21 + 0.0626 * distance - 0.000961 * Math.pow(distance , 2) + 0.00000504 * Math.pow(distance , 3);
             } else {
-                if (distance < 35) {
-                    hoodPos = -0.693+0.0445*(distance)+-0.0005*(Math.pow(distance, 2));
+                if(distance > 80 && distance < 96.23819) {
+                    hoodPos = 0.23;
+                }
+                if(distance > 96.23819) {
+                    hoodPos = -48.7 + 1.15 * distance - 0.00888 * Math.pow(distance, 2) + 0.000023 * Math.pow(distance, 3);
                 }
             }
 
@@ -150,6 +152,29 @@ public class Shooter {
     }
 
     public void ShooterGo(boolean input){
+        double leftVel = leftFlywheel.getVelocity();
+        double rightVel = rightFlywheel.getVelocity();
+        avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
+        flywheelPower = (pid.calculate(speed, avgRPM));
+        if (input && !lastButtonState) {
+            motorRunning = !motorRunning;
+        }
+        if (!motorRunning){
+            pid.reset();
+        }
+        leftFlywheel.setPower(motorRunning? 0 : flywheelPower);
+        rightFlywheel.setPower(motorRunning? 0 : flywheelPower);
+        hood.setPosition(hoodPos);
+        lastButtonState = input;
+
+        if(!motorRunning){
+            pid.reset();
+        }
+
+
+    }
+
+    public void ShooterTune(boolean input){
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();
         avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;

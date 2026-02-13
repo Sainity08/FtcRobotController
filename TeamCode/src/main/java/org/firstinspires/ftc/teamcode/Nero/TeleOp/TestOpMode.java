@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.SavePose;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
@@ -28,6 +29,7 @@ public class TestOpMode extends OpMode {
     private Follower follower;
     private Limelight3A limelight;
     private GoBildaPinpointDriver odom;
+    SavePose fileManager = new SavePose();
 
     boolean autoAim = false;
     boolean xWasPressed = false;
@@ -46,6 +48,11 @@ public class TestOpMode extends OpMode {
         turret.init(hardwareMap);
         shooter.init(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
+        //Read/Write
+//        fileManager.init();
+//        fileManager.FileRead();
+//        Pose startPose = new Pose(fileManager.routine.get(0),fileManager.routine.get(1),fileManager.routine.get(2));
+//        telemetry.addData("points",fileManager.routine);
         follower.setStartingPose(startPose);
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(1);
@@ -66,24 +73,7 @@ public class TestOpMode extends OpMode {
         double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x;
-        double tx = limelight.getLatestResult().getTx();
-        double ty = limelight.getLatestResult().getTy();
         boolean isValid = limelight.getLatestResult().isValid();
-
-        //AutoAim
-        if (gamepad1.x && !xWasPressed) {
-            autoAim = !autoAim;
-        }
-        xWasPressed = gamepad1.x;
-
-        if (autoAim && isValid) {
-            double kP = 0.01;
-            turn = kP * tx;
-            if (Math.abs(tx) < 1.0) {
-                turn = 0;
-            }
-        }
-
         drive.driveRobotRelative(y, x, turn);
 
         //Intake Commands
@@ -92,10 +82,13 @@ public class TestOpMode extends OpMode {
         double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.blueGoalX,turret.blueGoalY);
         intake.intake(gamepad1.left_bumper, gamepad1.right_bumper, input3, input4, distance);
 
+        shooter.RPM(distance);
+        shooter.hood(distance);
+
         //Manual Adjustment
         shooter.setRPM(gamepad1.dpad_up, gamepad1.dpad_down);
         shooter.setHood(gamepad1.dpad_left, gamepad1.dpad_right);
-        shooter.ShooterGo(gamepad1.y);
+        shooter.ShooterTune(gamepad1.x);
         //Lock Turret
         turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false);
 
@@ -106,6 +99,8 @@ public class TestOpMode extends OpMode {
         telemetry.addData("RPM", shooter.targetRPM);
         telemetry.addData("Current RPM", shooter.avgRPM);
         telemetry.addData("Hood", shooter.targetHood);
+        telemetry.addData("Calculated Hood", shooter.hoodPos);
+        telemetry.addData("Calculated RPM", shooter.speed);
         telemetry.addLine("-------------------------------------------");
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());

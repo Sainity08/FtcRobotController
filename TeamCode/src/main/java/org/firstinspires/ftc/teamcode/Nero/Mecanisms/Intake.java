@@ -22,7 +22,7 @@ public class Intake {
     public boolean lastButtonState2 = false;
     public boolean motorRunning2 = false;
     Shooter shooter = new Shooter();
-    private double bounds = 50;
+    private double bounds = 75;
     public double intakePower;
     public double actualPower;
     public boolean canIntake;
@@ -52,13 +52,12 @@ public class Intake {
                 intakePower = -.5;
                 hardstopPos = 1;
             } else {
-                if (scoring && shooter.avgRPM < (shooter.targetRPM + bounds) && shooter.avgRPM > (shooter.targetRPM - bounds)) {
+                if (scoring && shooter.avgRPM < (shooter.speed + bounds) && shooter.avgRPM > (shooter.speed - bounds)) {
                     intakePower = 0.75;
                     hardstopPos = 0;
-
                 } else {
                     if (back) {
-                        intakePower = 1;
+                        intakePower = 0.25;
                         hardstopPos = 0;
                     } else {
                         intakePower = 0;
