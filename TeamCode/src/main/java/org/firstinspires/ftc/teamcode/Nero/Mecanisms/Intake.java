@@ -50,7 +50,7 @@ public class Intake {
         } else {
             if (outtake) {
                 intakePower = -.5;
-                hardstopPos = 1;
+                hardstopPos = 0;
             } else {
                 if (scoring && shooter.avgRPM < (shooter.speed + bounds) && shooter.avgRPM > (shooter.speed - bounds)) {
                     intakePower = 0.75;

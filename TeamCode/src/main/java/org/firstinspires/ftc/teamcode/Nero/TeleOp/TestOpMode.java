@@ -82,13 +82,13 @@ public class TestOpMode extends OpMode {
         double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.blueGoalX,turret.blueGoalY);
         intake.intake(gamepad1.left_bumper, gamepad1.right_bumper, input3, input4, distance);
 
-        shooter.RPM(distance);
-        shooter.hood(distance);
+        shooter.newRPM(distance);
+        shooter.newHood(distance);
 
         //Manual Adjustment
         shooter.setRPM(gamepad1.dpad_up, gamepad1.dpad_down);
         shooter.setHood(gamepad1.dpad_left, gamepad1.dpad_right);
-        shooter.ShooterTune(gamepad1.x);
+        shooter.ShooterGo(gamepad1.x);
         //Lock Turret
         turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false);
 
@@ -99,8 +99,8 @@ public class TestOpMode extends OpMode {
         telemetry.addData("RPM", shooter.targetRPM);
         telemetry.addData("Current RPM", shooter.avgRPM);
         telemetry.addData("Hood", shooter.targetHood);
-        telemetry.addData("Calculated Hood", shooter.hoodPos);
-        telemetry.addData("Calculated RPM", shooter.speed);
+        telemetry.addData("Calculated Hood", shooter.Angle);
+        telemetry.addData("Calculated RPM", shooter.RPM);
         telemetry.addLine("-------------------------------------------");
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());

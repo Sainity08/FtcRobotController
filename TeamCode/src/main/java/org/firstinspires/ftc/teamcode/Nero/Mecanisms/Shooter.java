@@ -18,10 +18,12 @@ public class Shooter {
     public double targetRPM = 4800;
     private boolean upPressed = false;
     private boolean downPressed = false;
-    private final double rpmStep = 50;
+    private final double rpmStep = 25;
     public boolean lastButtonState = false;
     public boolean motorRunning = false;
     public double speed;
+    public double RPM;
+    public double Angle;
     public double hoodPos;
     public double flywheelPower;
     double turn;
@@ -77,6 +79,38 @@ public class Shooter {
 
         hoodPos = MathFunctions.clamp(hoodPos,0,1);
         return hoodPos;
+    }
+
+    public double newRPM(double distance) {
+
+        if (distance < 49.71) {
+            RPM = 24.13344 * distance + 2787.32174;
+        }
+        else if (distance <= 120) {
+            RPM = 0.0972178 * Math.pow(distance, 2)
+                    - 1.97757 * distance
+                    + 3846.86043;
+        }
+        else {
+            RPM = 5100;
+        }
+
+        return RPM;
+    }
+
+    public double newHood(double distance) {
+
+        if (distance < 49.71) {
+            Angle = 0.04632798 * distance - 1.556;
+        }
+        else if (distance <= 120) {
+            Angle = 0.75;
+        }
+        else { // distance > 120
+            Angle = 1.0;
+        }
+
+        return Angle;
     }
 
 //    private double AutoAim(boolean input, boolean isValid, double tx){
@@ -155,7 +189,7 @@ public class Shooter {
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();
         avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
-        flywheelPower = (pid.calculate(speed, avgRPM));
+        flywheelPower = (pid.calculate(RPM, avgRPM));
         if (input && !lastButtonState) {
             motorRunning = !motorRunning;
         }
@@ -164,7 +198,7 @@ public class Shooter {
         }
         leftFlywheel.setPower(motorRunning? 0 : flywheelPower);
         rightFlywheel.setPower(motorRunning? 0 : flywheelPower);
-        hood.setPosition(hoodPos);
+        hood.setPosition(Angle);
         lastButtonState = input;
 
         if(!motorRunning){
