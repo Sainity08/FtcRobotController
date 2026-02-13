@@ -47,7 +47,7 @@ public class Red15 extends OpMode {
     public PathChain Path8;
     public PathChain Path9;
     public PathChain Path10;
-    private final Pose startPose = new Pose(34, 136.000, Math.toRadians(270));
+    private final Pose startPose = new Pose(110, 136.000, Math.toRadians(270));
     private Follower follower;
     double shootAngle = 315;
     SavePose fileManager = new SavePose();
@@ -59,7 +59,7 @@ public class Red15 extends OpMode {
 
                                 new Pose(89.494, 89.117)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(0))
+                ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0))
 
                 .build();
 
@@ -99,7 +99,7 @@ public class Red15 extends OpMode {
                                 new Pose(111.438, 67.587),
                                 new Pose(127.970, 70.913)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(-90))
+                ).setConstantHeadingInterpolation(Math.toRadians(270))
 
                 .build();
 
@@ -109,7 +109,7 @@ public class Red15 extends OpMode {
 
                                 new Pose(89.445, 89.317)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(-90))
+                ).setConstantHeadingInterpolation(Math.toRadians(270))
 
                 .build();
 
@@ -139,7 +139,7 @@ public class Red15 extends OpMode {
                                 new Pose(131.800, 79.506),
                                 new Pose(136.664, 9.374)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(-90))
+                ).setConstantHeadingInterpolation(Math.toRadians(270))
 
                 .build();
 
@@ -149,7 +149,7 @@ public class Red15 extends OpMode {
 
                                 new Pose(81.475, 103.985)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(-90))
+                ).setConstantHeadingInterpolation(Math.toRadians(270))
 
                 .build();
     }
