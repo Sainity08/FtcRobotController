@@ -174,6 +174,16 @@ public class Shooter {
 
     }
 
+    public void ShooterAuto(){
+        double leftVel = leftFlywheel.getVelocity();
+        double rightVel = rightFlywheel.getVelocity();
+        avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
+        flywheelPower = (pid.calculate(speed + 40, avgRPM));
+        leftFlywheel.setPower(flywheelPower);
+        rightFlywheel.setPower(flywheelPower);
+        hood.setPosition(hoodPos);
+    }
+
     public void ShooterTune(boolean input){
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();

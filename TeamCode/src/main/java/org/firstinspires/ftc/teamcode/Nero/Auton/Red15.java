@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "Blue 15 Ball")
-public class Blue15 extends OpMode {
+@Autonomous(name = "Red 15 Ball")
+public class Red15 extends OpMode {
     private double distance = 31.1126983722;
 
     private Limelight3A limelight;
@@ -55,101 +55,101 @@ public class Blue15 extends OpMode {
     public void buildPaths() {
         Path1 = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(34.000, 136.000),
+                                new Pose(110.000, 136.000),
 
-                                new Pose(54.506, 89.117)
+                                new Pose(89.494, 89.117)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(180))
+                ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(0))
 
                 .build();
 
         Path2 = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(54.506, 89.117),
-                                new Pose(49.630, 81.506),
-                                new Pose(18.747, 83.306)
+                                new Pose(89.494, 89.117),
+                                new Pose(94.370, 81.506),
+                                new Pose(125.253, 83.306)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(180))
+                ).setConstantHeadingInterpolation(Math.toRadians(0))
 
                 .build();
 
         Path3 = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(18.747, 83.306),
+                                new Pose(125.253, 83.306),
 
-                                new Pose(54.396, 89.223)
+                                new Pose(89.604, 89.223)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(180))
+                ).setConstantHeadingInterpolation(Math.toRadians(0))
 
                 .build();
 
         Path4 = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(54.396, 89.223),
-                                new Pose(65.202, 54.794),
-                                new Pose(18.936, 59.121)
+                                new Pose(89.604, 89.223),
+                                new Pose(78.798, 54.794),
+                                new Pose(125.064, 59.121)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(180))
+                ).setConstantHeadingInterpolation(Math.toRadians(0))
 
                 .build();
 
         Path5 = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(18.936, 59.121),
-                                new Pose(32.562, 67.587),
-                                new Pose(16.030, 70.913)
+                                new Pose(125.064, 59.121),
+                                new Pose(111.438, 67.587),
+                                new Pose(127.970, 70.913)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(270))
+                ).setConstantHeadingInterpolation(Math.toRadians(-90))
 
                 .build();
 
         Path6 = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(16.030, 70.913),
+                                new Pose(127.970, 70.913),
 
-                                new Pose(54.555, 89.317)
+                                new Pose(89.445, 89.317)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(270))
+                ).setConstantHeadingInterpolation(Math.toRadians(-90))
 
                 .build();
 
         Path7 = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(54.555, 89.317),
-                                new Pose(65.285, 29.358),
-                                new Pose(18.475, 35.302)
+                                new Pose(89.445, 89.317),
+                                new Pose(78.715, 29.358),
+                                new Pose(125.525, 35.302)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(180))
+                ).setConstantHeadingInterpolation(Math.toRadians(0))
 
                 .build();
 
         Path8 = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(18.475, 35.302),
+                                new Pose(125.525, 35.302),
 
-                                new Pose(54.951, 89.396)
+                                new Pose(89.049, 89.396)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(180))
+                ).setConstantHeadingInterpolation(Math.toRadians(0))
 
                 .build();
 
         Path9 = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(54.951, 89.396),
-                                new Pose(12.200, 79.506),
-                                new Pose(7.336, 9.374)
+                                new Pose(89.049, 89.396),
+                                new Pose(131.800, 79.506),
+                                new Pose(136.664, 9.374)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(270))
+                ).setConstantHeadingInterpolation(Math.toRadians(-90))
 
                 .build();
 
         Path10 = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(7.336, 9.374),
+                                new Pose(136.664, 9.374),
 
-                                new Pose(62.525, 103.985)
+                                new Pose(81.475, 103.985)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(270))
+                ).setConstantHeadingInterpolation(Math.toRadians(-90))
 
                 .build();
     }
@@ -409,9 +409,9 @@ public class Blue15 extends OpMode {
         telemetry.addData("shooter time", ShooterTimer.seconds());
         telemetry.addData("nigger sits at lever for", LeverTimer.seconds());
         telemetry.addData("rpm", shooter.avgRPM);
-        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false);
+        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.redGoalX,turret.redGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), true, false);
 
-        double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.blueGoalX,turret.blueGoalY);
+        double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.redGoalX,turret.redGoalY);
         shooter.RPM(distance + 5);
         shooter.hood(distance + 5);
         shooter.ShooterAuto();
