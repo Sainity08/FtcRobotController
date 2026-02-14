@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
-import org.firstinspires.ftc.teamcode.Nero.Mecanisms.SavePose;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.file;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -31,7 +31,7 @@ public class Red12 extends OpMode {
     boolean intaking = true;
     boolean scoring = false;
     private ElapsedTime ShooterTimer = new ElapsedTime();
-    SavePose fileManager = new SavePose();
+    file fileManager = new file();
     Shooter shooter = new Shooter();
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;

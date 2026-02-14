@@ -11,15 +11,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
-import org.firstinspires.ftc.teamcode.Nero.Mecanisms.SavePose;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.file;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
-@TeleOp(name = "Test")
-public class TestOpMode extends OpMode {
+@TeleOp(name = "Blue Op Mode")
+public class BlueOpMode extends OpMode {
     Drivetrain drive = new Drivetrain();
     Intake intake = new Intake();
     NeroFlywheelPIDF pid;
@@ -29,15 +29,14 @@ public class TestOpMode extends OpMode {
     private Follower follower;
     private Limelight3A limelight;
     private GoBildaPinpointDriver odom;
-    SavePose fileManager = new SavePose();
-
+    file fileManager = new file();
     boolean autoAim = false;
     boolean xWasPressed = false;
     public Servo hood;
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;
     //Pedro
-    private final Pose startPose = new Pose(72, 72, (Math.toRadians(0)));
+//    private final Pose startPose = new Pose(72, 72, (Math.toRadians(0)));
 
     //Roadrunner
 //    private final Pose startPose = new Pose(0, 0, (Math.toRadians(0)));
@@ -49,10 +48,10 @@ public class TestOpMode extends OpMode {
         shooter.init(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
         //Read/Write
-//        fileManager.init();
-//        fileManager.FileRead();
-//        Pose startPose = new Pose(fileManager.routine.get(0),fileManager.routine.get(1),fileManager.routine.get(2));
-//        telemetry.addData("points",fileManager.routine);
+        fileManager.init();
+        fileManager.FileRead();
+        Pose startPose = new Pose(fileManager.routine.get(0),fileManager.routine.get(1),fileManager.routine.get(2));
+        telemetry.addData("points",fileManager.routine);
         follower.setStartingPose(startPose);
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(1);
@@ -80,19 +79,26 @@ public class TestOpMode extends OpMode {
         boolean input3 = gamepad1.left_trigger > 0.3;
         boolean input4 = gamepad1.right_trigger > 0.3;
         double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.blueGoalX,turret.blueGoalY);
-        intake.intake(gamepad1.left_bumper, gamepad1.right_bumper, input3, input4, distance);
+        intake.intake(gamepad1.left_bumper, gamepad1.right_bumper, input3, distance);
 
         shooter.newRPM(distance);
         shooter.newHood(distance);
-
-        //Manual Adjustment
-        shooter.setRPM(gamepad1.dpad_up, gamepad1.dpad_down);
-        shooter.setHood(gamepad1.dpad_left, gamepad1.dpad_right);
         shooter.ShooterGo(gamepad1.x);
-        //Lock Turret
         turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false);
 
+        if(gamepad1.dpad_left){
+            follower.setPose(new Pose (134.5,8.5,Math.toRadians(0)));
+        }
+        if(gamepad1.dpad_right){
+            follower.setPose(new Pose (22.5,127.5,follower.getHeading()));
+        }
+        if(gamepad1.dpadDownWasPressed()) {
+            turret.offset -= .005;
+        }
 
+        if(gamepad1.dpadUpWasPressed()) {
+            turret.offset += .005;
+        }
 
         follower.update();
         telemetry.addData("Distance", distance);
@@ -113,6 +119,8 @@ public class TestOpMode extends OpMode {
         telemetry.addData("Intake power is", intake.actualPower);
         telemetry.addData("can index?", intake.canIntake);
         telemetry.addLine("-------------------------------------------");
+        telemetry.addData("turret angle", turret.turretAngle);
+        telemetry.addData("turret offset" , turret.offset);
 
     }
 }

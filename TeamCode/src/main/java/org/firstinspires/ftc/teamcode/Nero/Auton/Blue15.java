@@ -14,9 +14,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
-import org.firstinspires.ftc.teamcode.Nero.Mecanisms.SavePose;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.file;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -50,7 +50,7 @@ public class Blue15 extends OpMode {
     private final Pose startPose = new Pose(34, 136.000, Math.toRadians(270));
     private Follower follower;
     double shootAngle = 315;
-    SavePose fileManager = new SavePose();
+    file fileManager = new file();
 
     public void buildPaths() {
         Path1 = follower.pathBuilder().addPath(
@@ -262,7 +262,7 @@ public class Blue15 extends OpMode {
                     if (ShooterDone1) {
                         follower.followPath(Path5, true);
                         LeverTimer.reset();
-                        if (!follower.isBusy() | (follower.getPose().getX()) < 18) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) < 17) {
                             pathState = PathState.PRESSLEVER;
                             ShooterTimer.reset();
                             IntakeDone1 = true;
@@ -407,13 +407,13 @@ public class Blue15 extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.addData("shooter time", ShooterTimer.seconds());
-        telemetry.addData("nigger sits at lever for", LeverTimer.seconds());
+        telemetry.addData("lever time", LeverTimer.seconds());
         telemetry.addData("rpm", shooter.avgRPM);
         turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false);
 
         double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.blueGoalX,turret.blueGoalY);
-        shooter.RPM(distance + 5);
-        shooter.hood(distance + 5);
+        shooter.newRPM(distance);
+        shooter.newHood(distance);
         shooter.ShooterAuto();
         intake.autonIntake(intaking, false, scoring);
         follower.update();

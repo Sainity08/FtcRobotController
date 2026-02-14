@@ -212,10 +212,10 @@ public class Shooter {
         double leftVel = leftFlywheel.getVelocity();
         double rightVel = rightFlywheel.getVelocity();
         avgRPM = (leftVel + rightVel) / 2 / 28.0 * 60.0;
-        flywheelPower = (pid.calculate(speed + 40, avgRPM));
+        flywheelPower = (pid.calculate(RPM, avgRPM));
         leftFlywheel.setPower(flywheelPower);
         rightFlywheel.setPower(flywheelPower);
-        hood.setPosition(hoodPos);
+        hood.setPosition(Angle);
     }
 
     public void ShooterTune(boolean input){

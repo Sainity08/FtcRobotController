@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SavePose {
+public class file {
     public List<Double> routine;
 
 

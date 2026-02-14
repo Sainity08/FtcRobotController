@@ -15,22 +15,25 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.file;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "Blue 12 Ball")
-public class Blue12 extends OpMode {
+@Autonomous(name = "Back Blue")
+public class BlueBack extends OpMode {
     private double distance = 31.1126983722;
 
     private Limelight3A limelight;
     Intake intake = new Intake();
     Drivetrain drive = new Drivetrain();
+    Turret turret = new Turret();
     NeroFlywheelPIDF pid;
     public Servo hood, leftT, rightT;
     boolean intaking = true;
     boolean scoring = false;
     private ElapsedTime ShooterTimer = new ElapsedTime();
+    private ElapsedTime LeverTimer = new ElapsedTime();
     Shooter shooter = new Shooter();
     public DcMotorEx leftFlywheel = null;
     public DcMotorEx rightFlywheel = null;
@@ -43,7 +46,7 @@ public class Blue12 extends OpMode {
     public PathChain Path7;
     public PathChain Path8;
     public PathChain Path9;
-    private final Pose startPose = new Pose(34, 136.000, Math.toRadians(270));
+    private final Pose startPose = new Pose(55, 7.75, Math.toRadians(270));
     private Follower follower;
     double shootAngle = 315;
     file fileManager = new file();
@@ -51,70 +54,69 @@ public class Blue12 extends OpMode {
     public void buildPaths() {
         Path1 = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(34.000, 136.000),
+                                new Pose(55, 7.75),
 
-                                new Pose(37.000, 106.000)
+                                new Pose(56.000, 14.000)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(shootAngle-6))
+                ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
 
                 .build();
 
         Path2 = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(37.000, 106.000),
-                                new Pose(73.629, 79.998),
-                                new Pose(14.753, 83.199)
+                                new Pose(56.000, 14.000),
+                                new Pose(59.277, 38.436),
+                                new Pose(12.962, 35.725)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                 .build();
 
         Path3 = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(13.690, 83.863),
-                                new Pose(51.869, 79.729),
-                                new Pose(37.022, 106.022)
-                        )
-                ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle-3))
+                        new BezierLine(
+                                new Pose(12.962, 35.725),
 
-                .build();
-
-        Path4 = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(37.022, 106.022),
-                                new Pose(60.736, 52.349),
-                                new Pose(12, 59.672)
+                                new Pose(56.000, 14.000)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                 .build();
 
+        Path4 = follower.pathBuilder().addPath(
+                        new BezierCurve(
+                                new Pose(56.000, 14.000),
+                                new Pose(6.732, 57.811),
+                                new Pose(8.417, 10)
+                        )
+                ).setConstantHeadingInterpolation(Math.toRadians(270))
+
+                .build();
 
         Path5 = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(14.015, 59.672),
-                                new Pose(32.985, 66.875),
-                                new Pose(13.948, 75)
+                        new BezierLine(
+                                new Pose(8.417, 10),
+
+                                new Pose(56.000, 14.000)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(0))
+                ).setConstantHeadingInterpolation(Math.toRadians(270))
 
                 .build();
 
         Path6 = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(13.948, 75),
-                                new Pose(53.980, 66.400),
-                                new Pose(37.000, 106.000)
+                        new BezierLine(
+                                new Pose(56.000, 14.000),
+
+                                new Pose(7.653, 13.623)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle-3))
+                ).setTangentHeadingInterpolation()
 
                 .build();
 
         Path7 = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(37.000, 106.000),
-                                new Pose(70.681, 26.138),
-                                new Pose(12.554, 35.554)
+                        new BezierLine(
+                                new Pose(7.653, 13.623),
+
+                                new Pose(56.000, 14.000)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -122,19 +124,19 @@ public class Blue12 extends OpMode {
 
         Path8 = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(12.554, 35.554),
-                                new Pose(59.260, 26.744),
-                                new Pose(37.000, 106.000)
+                                new Pose(56.000, 14.000),
+                                new Pose(54.140, 34.100),
+                                new Pose(7.162, 36.072)
                         )
-                ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(shootAngle-1))
+                ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                 .build();
 
         Path9 = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(37.000, 106.000),
-                                new Pose(49.845, 67.330),
-                                new Pose(24, 69.561)
+                        new BezierLine(
+                                new Pose(7.162, 36.072),
+
+                                new Pose(56.000, 14.000)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -148,14 +150,15 @@ public class Blue12 extends OpMode {
         INTAKE1_SHOOT2POSE,
         SHOOT2,
         INTAKE2,
-        INTAKE2_LEVER,
-        PRESSLEVER,
-        LEVER_SHOOT3POSE,
+        INTAKE2_SHOOT3POSE,
         SHOOT3,
         INTAKE3,
         INTAKE3_SHOOT4POSE,
         SHOOT4,
-        SHOOT4_LEVER,
+        INTAKE4,
+        INTAKE4_SHOOT5,
+        SHOOT5
+
     }
 
     boolean ShooterDone = false;
@@ -165,6 +168,8 @@ public class Blue12 extends OpMode {
     boolean ShooterDone2 = false;
     boolean ShooterDone3 = false;
     boolean IntakeDone2 = false;
+    boolean IntakeDone3 = false;
+    boolean intakedone = false;
     boolean done = false;
     boolean autoAim;
     PathState pathState;
@@ -176,24 +181,23 @@ public class Blue12 extends OpMode {
                 if (!follower.isBusy()) {
                     intaking = true;
                     follower.followPath(Path1, true);
-                    if ((((follower.getPose().getX() < 107) && (follower.getPose().getY() < 106)))) {
-                        pathState = PathState.SHOOT1;
-                        ShooterTimer.reset();
-                    }
+                    pathState = PathState.SHOOT1;
+                    ShooterTimer.reset();
                 }
                 break;
             case SHOOT1:
                 if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 2) {
+                    if (ShooterTimer.seconds() > 5.5) {
                         pathState = PathState.INTAKE1;
                         ShooterDone = true;
                         intaking = true;
                         scoring = false;
                         autoAim = false;
                     } else {
-                        scoring = true;
-                        intaking = false;
-                        autoAim = true;
+                        if(shooter.avgRPM > 4800) {
+                            scoring = true;
+                            intaking = false;
+                        }
                     }
                 }
             case INTAKE1:
@@ -208,7 +212,7 @@ public class Blue12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone) {
                         follower.followPath(Path3,true);
-                        if (!follower.isBusy() | ((((follower.getPose().getX() < 107) && (follower.getPose().getY() < 106))))) {
+                        if (!follower.isBusy() | follower.getPose().getX() > 56) {
                             pathState = PathState.SHOOT2;
                             ShooterTimer.reset();
                             IntakeDone = true;
@@ -218,8 +222,8 @@ public class Blue12 extends OpMode {
                 }
 
             case SHOOT2:
-                if (!follower.isBusy()) {
-                    if (ShooterTimer.seconds() > 3.5){
+                if (!follower.isBusy() && IntakeDone) {
+                    if (ShooterTimer.seconds() > 3){
                         pathState = PathState.INTAKE2;
                         ShooterDone1 = true;
                         intaking = true;
@@ -236,38 +240,16 @@ public class Blue12 extends OpMode {
                 if (!follower.isBusy()) {
                     if (ShooterDone1) {
                         follower.followPath(Path4);
-                        pathState = PathState.INTAKE2_LEVER;
+                        pathState = PathState.INTAKE2_SHOOT3POSE;
+                        intakedone = true;
                         break;
                     }
                 }
-            case INTAKE2_LEVER:
-                if (!follower.isBusy()) {
-                    if (ShooterDone1) {
+            case INTAKE2_SHOOT3POSE:
+                if(!follower.isBusy() && intakedone) {
+                    if (!follower.isBusy() | follower.getPose().getY() < 10) {
                         follower.followPath(Path5, true);
-                        if (!follower.isBusy() | (follower.getPose().getX()) < 20.65) {
-                            pathState = PathState.PRESSLEVER;
-                            ShooterTimer.reset();
-                            IntakeDone1 = true;
-                            break;
-                        }
-                    }
-                }
-            case PRESSLEVER:
-                if (!follower.isBusy() && ShooterDone1) {
-                    if(ShooterTimer.seconds() > 3){
-                        pathState = PathState.LEVER_SHOOT3POSE;
-                        scoring = false;
-                        break;
-                    } else {
-                        scoring = false;
-                    }
-
-                }
-            case LEVER_SHOOT3POSE:
-                if (!follower.isBusy()) {
-                    if (IntakeDone1) {
-                        follower.followPath(Path6, true);
-                        if (!follower.isBusy() | follower.getPose().getY() > 106) {
+                        if (!follower.isBusy() | follower.getPose().getX() > 56) {
                             pathState = PathState.SHOOT3;
                             done = true;
                             ShooterTimer.reset();
@@ -276,8 +258,9 @@ public class Blue12 extends OpMode {
                     }
                 }
             case SHOOT3:
-                if (!follower.isBusy() && IntakeDone1 && done) {
-                    if (ShooterTimer.seconds() > 2.5) {
+                if (!follower.isBusy() && done) {
+                    double t = ShooterTimer.seconds();
+                    if (t > 3) {
                         pathState = PathState.INTAKE3;
                         ShooterDone2 = true;
                         intaking = true;
@@ -293,7 +276,7 @@ public class Blue12 extends OpMode {
             case INTAKE3:
                 if (!follower.isBusy()) {
                     if (ShooterDone2) {
-                        follower.followPath(Path7);
+                        follower.followPath(Path6);
                         IntakeDone2 = true;
                         pathState = PathState.INTAKE3_SHOOT4POSE;
                         break;
@@ -302,8 +285,8 @@ public class Blue12 extends OpMode {
             case INTAKE3_SHOOT4POSE:
                 if (!follower.isBusy()) {
                     if (IntakeDone2) {
-                        follower.followPath(Path8);
-                        if (!follower.isBusy() | follower.getPose().getY() > 106) {
+                        follower.followPath(Path7);
+                        if (!follower.isBusy() | follower.getPose().getX() > 56) {
                             pathState = PathState.SHOOT4;
                             ShooterTimer.reset();
                             break;
@@ -312,8 +295,8 @@ public class Blue12 extends OpMode {
                 }
             case SHOOT4:
                 if (!follower.isBusy() && IntakeDone2) {
-                    if (ShooterTimer.seconds() > 2.5) {
-                        pathState = PathState.SHOOT4_LEVER;
+                    if (ShooterTimer.seconds() > 3) {
+                        pathState = PathState.INTAKE4;
                         ShooterDone3 = true;
                         intaking = true;
                         scoring = false;
@@ -325,11 +308,38 @@ public class Blue12 extends OpMode {
                         autoAim = true;
                     }
                 }
-            case SHOOT4_LEVER:
+            case INTAKE4:
                 if (!follower.isBusy()) {
                     if (ShooterDone3) {
-                        follower.followPath(Path9);
+                        follower.followPath(Path8);
+                        IntakeDone3 = true;
+                        pathState = PathState.INTAKE4_SHOOT5;
                         break;
+                    }
+                }
+            case INTAKE4_SHOOT5:
+                if (!follower.isBusy()) {
+                    if (IntakeDone3) {
+                        follower.followPath(Path8);
+                        if (!follower.isBusy() | follower.getPose().getX() > 56) {
+                            pathState = PathState.SHOOT4;
+                            ShooterTimer.reset();
+                            break;
+                        }
+                    }
+                }
+            case SHOOT5:
+                if (!follower.isBusy() && IntakeDone2) {
+                    if (ShooterTimer.seconds() > 3) {
+                        ShooterDone3 = true;
+                        scoring = false;
+                        autoAim = false;
+                        ShooterTimer.reset();
+
+                    } else {
+                        scoring = true;
+                        intaking = false;
+                        autoAim = true;
                     }
                 }
         }
@@ -341,7 +351,6 @@ public class Blue12 extends OpMode {
 
     @Override
     public void start() {
-        limelight.start();
         setPathState(pathState);
     }
 
@@ -356,20 +365,17 @@ public class Blue12 extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.addData("shooter time", ShooterTimer.seconds());
+        telemetry.addData("lever time", LeverTimer.seconds());
         telemetry.addData("rpm", shooter.avgRPM);
+        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false);
 
-        double targetRPM = shooter.RPM(48.9182992345);
-        intake.autonIntake(intaking, false, scoring);
-        double hoodPos = shooter.hood(48.9182992345);
-        double flywheel = pid.calculate(targetRPM, shooter.avgRPM);
-        leftFlywheel.setPower(flywheel);
-        rightFlywheel.setPower(flywheel);
-        hood.setPosition(0);
-        boolean isValid = limelight.getLatestResult().isValid();
-        double tx = limelight.getLatestResult().getTx();
-        leftT.setPosition(0.5);
-        rightT.setPosition(0.5);
-
+        double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.blueGoalX,turret.blueGoalY);
+        shooter.newRPM(distance - 20);
+        shooter.newHood(distance);
+        shooter.ShooterAuto();
+        intake.backAutonIntake(intaking, false, scoring);
+        follower.update();
+        turret.offset = 0.0175;
     }
 
     @Override
@@ -379,20 +385,10 @@ public class Blue12 extends OpMode {
         buildPaths();
         follower.setPose(startPose);
         ShooterTimer = new ElapsedTime();
+        LeverTimer = new ElapsedTime();
         intake.init(hardwareMap);
-        hood = hardwareMap.get(Servo.class, "hood");
-        leftFlywheel = hardwareMap.get(DcMotorEx.class, "1");
-        rightFlywheel = hardwareMap.get(DcMotorEx.class, "2");
-        leftFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rightFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(2);
-        pid = new NeroFlywheelPIDF(0.000005, 0, 0, 0.0002);
         shooter.init(hardwareMap);
-        leftT = hardwareMap.get(Servo.class, "leftT");
-        rightT = hardwareMap.get(Servo.class, "rightT");
+        turret.init(hardwareMap);
         fileManager.init();
     }
     @Override

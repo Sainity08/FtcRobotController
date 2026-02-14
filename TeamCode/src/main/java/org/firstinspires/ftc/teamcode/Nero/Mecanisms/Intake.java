@@ -37,7 +37,7 @@ public class Intake {
         leftIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void intake(boolean intake, boolean outtake, boolean scoring, boolean back, double distance) {
+    public void intake(boolean intake, boolean outtake, boolean scoring, double distance) {
 
         if (intake && !lastButtonState) {
             motorRunning = !motorRunning;
@@ -53,15 +53,16 @@ public class Intake {
                 hardstopPos = 0;
             } else {
                 if (scoring && shooter.avgRPM < (shooter.speed + bounds) && shooter.avgRPM > (shooter.speed - bounds)) {
-                    intakePower = 0.75;
-                    hardstopPos = 0;
-                } else {
-                    if (back) {
+                    if (distance <= 120){
+                        intakePower = 0.75;
+                        hardstopPos = 0;
+                    }
+                    if (distance > 120) {
                         intakePower = 0.25;
                         hardstopPos = 0;
-                    } else {
-                        intakePower = 0;
                     }
+                } else {
+                    intakePower = 0;
                 }
             }
         }
@@ -85,6 +86,30 @@ public class Intake {
             } else {
                 if(scoring){
                     intakePower = 0.75;
+                    hardstopPos = 0;
+                }
+                else{
+                    intakePower = 0;
+                }
+            }
+        }
+
+        leftIntake.setPower(intakePower);
+        rightIntake.setPower(intakePower);
+        hardstop.setPosition(hardstopPos);
+    }
+    public void backAutonIntake(boolean intake, boolean outtake, boolean scoring) {
+
+        if(intake){
+            intakePower = 1;
+            hardstopPos = 1;
+        } else{
+            if(outtake){
+                intakePower = -.5;
+                hardstopPos = 1;
+            } else {
+                if(scoring){
+                    intakePower = 0.25;
                     hardstopPos = 0;
                 }
                 else{
