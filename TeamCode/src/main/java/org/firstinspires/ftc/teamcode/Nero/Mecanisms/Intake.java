@@ -54,7 +54,7 @@ public class Intake {
             } else {
                 if (scoring && shooter.avgRPM < (shooter.speed + bounds) && shooter.avgRPM > (shooter.speed - bounds)) {
                     if (distance <= 120){
-                        intakePower = 0.75;
+                        intakePower = 0.7;
                         hardstopPos = 0;
                     }
                     if (distance > 120) {

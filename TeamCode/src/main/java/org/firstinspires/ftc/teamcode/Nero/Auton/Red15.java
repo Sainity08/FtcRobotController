@@ -261,7 +261,7 @@ public class Red15 extends OpMode {
                     if (ShooterDone1) {
                         follower.followPath(Path5, true);
                         LeverTimer.reset();
-                        if (!follower.isBusy() | (follower.getPose().getX()) > 127) {
+                        if (!follower.isBusy() | (follower.getPose().getX()) > 126) {
                             pathState = PathState.PRESSLEVER;
                             ShooterTimer.reset();
                             IntakeDone1 = true;
@@ -408,7 +408,7 @@ public class Red15 extends OpMode {
         telemetry.addData("shooter time", ShooterTimer.seconds());
         telemetry.addData("lever time", LeverTimer.seconds());
         telemetry.addData("rpm", shooter.avgRPM);
-        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.redGoalX,turret.redGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), true, false);
+        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false , false);
 
         double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.redGoalX,turret.redGoalY);
         shooter.newRPM(distance);

@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.file;
 import org.firstinspires.ftc.teamcode.Nero.PID.NeroFlywheelPIDF;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -27,6 +28,7 @@ public class Blue12 extends OpMode {
     Intake intake = new Intake();
     Drivetrain drive = new Drivetrain();
     NeroFlywheelPIDF pid;
+    Turret turret = new Turret();
     public Servo hood, leftT, rightT;
     boolean intaking = true;
     boolean scoring = false;
@@ -357,14 +359,11 @@ public class Blue12 extends OpMode {
         telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.addData("shooter time", ShooterTimer.seconds());
         telemetry.addData("rpm", shooter.avgRPM);
-
-        double targetRPM = shooter.RPM(48.9182992345);
+        double distance = Shooter.distance2D(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()), turret.redGoalX,turret.redGoalY);
+        shooter.newRPM(distance);
+        shooter.newHood(distance);
+        shooter.ShooterAuto();
         intake.autonIntake(intaking, false, scoring);
-        double hoodPos = shooter.hood(48.9182992345);
-        double flywheel = pid.calculate(targetRPM, shooter.avgRPM);
-        leftFlywheel.setPower(flywheel);
-        rightFlywheel.setPower(flywheel);
-        hood.setPosition(0);
         boolean isValid = limelight.getLatestResult().isValid();
         double tx = limelight.getLatestResult().getTx();
         leftT.setPosition(0.5);

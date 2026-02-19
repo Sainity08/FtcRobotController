@@ -59,8 +59,6 @@ public class RedOpMode extends OpMode {
         leftFlywheel = hardwareMap.get(DcMotorEx.class, "1");
         rightFlywheel = hardwareMap.get(DcMotorEx.class, "2");
         hood = hardwareMap.get(Servo.class,"hood");
-        odom = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-        odom.recalibrateIMU();
         leftFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightFlywheel.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftFlywheel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
@@ -84,7 +82,7 @@ public class RedOpMode extends OpMode {
         shooter.newRPM(distance);
         shooter.newHood(distance);
         shooter.ShooterGo(gamepad1.x);
-        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.redGoalX,turret.redGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), true, false);
+        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false , gamepad1.a);
 
         if(gamepad1.dpad_left){
             follower.setPose(new Pose (144-134.5,8.5,Math.toRadians(0)));
@@ -122,6 +120,7 @@ public class RedOpMode extends OpMode {
         telemetry.addLine("-------------------------------------------");
         telemetry.addData("turret angle", turret.turretAngle);
         telemetry.addData("turret offset" , turret.offset);
+        telemetry.addData("turret degrees" , turret.angle);
 
     }
 }

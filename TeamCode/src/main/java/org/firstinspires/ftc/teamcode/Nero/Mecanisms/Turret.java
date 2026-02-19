@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+import java.nio.file.LinkPermission;
+
 
 public class Turret {
 
@@ -24,6 +26,7 @@ public class Turret {
     public double angle;
     public double omega;
     public double offset;
+    private boolean lastPressed;
 
     public double[] goal;
 
@@ -134,6 +137,7 @@ public class Turret {
         return angleToServo(angle);
     }
 
+
     public void calcflightTime(double distance){
         ballFlightTime = distance * .01;        // need to figure out regression line
     }
@@ -218,7 +222,8 @@ public class Turret {
             double robotVectX,
             double robotVectY,
             boolean isRed,
-            boolean SOTM
+            boolean SOTM,
+            boolean input
     ) {
         goal = shootOnTheMove(
                 turretpositionX(robotX, robotY, robotHeading),
@@ -230,7 +235,7 @@ public class Turret {
         );
         omega = AngularVelocity(robotHeading);
         turretFeedForwardServo =  (-omega * TURRET_FF_GAIN) / 360.0;
-        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1]) + turretFeedForwardServo + offset;
+        turretAngle = calculateTurretAngle(robotX, robotY, robotHeading, goal[0], goal[1]) + offset;
 //        FFturret(robotHeading);
         turretAngle = MathFunctions.clamp(turretAngle,0.0813,.917);
 
@@ -239,6 +244,11 @@ public class Turret {
 //        analogangle = (((turretAnalog.getVoltage() / 3.3)* 450)-45);
 
 //        analogangle = MathFunctions.clamp(analogangle,.25,.75);
+        if (input && !lastPressed) {
+            shooterActivated = !shooterActivated;
+        }
+        lastPressed = input;
+
 
 
 
@@ -257,3 +267,4 @@ public class Turret {
         }
     }
 }
+

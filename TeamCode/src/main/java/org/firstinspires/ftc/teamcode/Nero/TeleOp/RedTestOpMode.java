@@ -88,7 +88,7 @@ public class RedTestOpMode extends OpMode {
         shooter.setHood(gamepad1.dpad_left, gamepad1.dpad_right);
         shooter.ShooterGo(gamepad1.x);
         //Lock Turret
-        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.redGoalX,turret.redGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), true, false);
+        turret.update(turret.turretpositionX(follower.getPose().getX(), follower.getPose().getY(),follower.getHeading()),turret.turretpositionY(follower.getPose().getX(), follower.getPose().getY(),follower.getPose().getHeading()),Math.toDegrees(follower.getHeading()),turret.blueGoalX,turret.blueGoalY,follower.getVelocity().getXComponent(),follower.getVelocity().getYComponent(), false, false , gamepad1.a);
 
 
 
@@ -111,6 +111,8 @@ public class RedTestOpMode extends OpMode {
         telemetry.addData("Intake power is", intake.actualPower);
         telemetry.addData("can index?", intake.canIntake);
         telemetry.addLine("-------------------------------------------");
-
+        telemetry.addData("turret angle", turret.turretAngle);
+        telemetry.addData("turret offset" , turret.offset);
+        telemetry.addData("turret degrees" , turret.angle);
     }
 }

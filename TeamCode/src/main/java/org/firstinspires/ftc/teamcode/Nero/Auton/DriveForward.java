@@ -1,18 +1,25 @@
 package org.firstinspires.ftc.teamcode.Nero.Auton;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.file;
 
 @Autonomous(name="Drive Forward")
 public class DriveForward extends OpMode {
 
     private DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
     private final ElapsedTime timer = new ElapsedTime();
+    private Follower follower;
+    private Pose startPose = new Pose (55, 7.75 , Math.toRadians(180));
 
     private boolean movementStarted = false;
     private boolean movementCompleted = false;
+    file fileManager = new file();
 
     @Override
     public void init() {
@@ -21,6 +28,8 @@ public class DriveForward extends OpMode {
         frontRightMotor = hardwareMap.get(DcMotor.class, "rightFront");
         backRightMotor = hardwareMap.get(DcMotor.class, "rightBack");
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        follower.setPose(startPose);
+        fileManager.init();
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -57,5 +66,6 @@ public class DriveForward extends OpMode {
         backLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backRightMotor.setPower(0);
+        fileManager.FileWrite(follower.getPose().getX(),follower.getPose().getY(),follower.getHeading());
     }
 }
