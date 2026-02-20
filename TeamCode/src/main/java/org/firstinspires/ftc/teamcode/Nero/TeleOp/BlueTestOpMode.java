@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.AutoAim;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Drivetrain;
-import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;;
+import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Intake;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Shooter;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.Turret;
 import org.firstinspires.ftc.teamcode.Nero.Mecanisms.file;
@@ -48,6 +48,7 @@ public class BlueTestOpMode extends OpMode {
         intake.init(hardwareMap);
         turret.init(hardwareMap);
         shooter.init(hardwareMap);
+        autoAim.init(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
         //Read/Write
         fileManager.init();

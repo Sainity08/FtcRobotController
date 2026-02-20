@@ -17,8 +17,9 @@ public class AutoAim {
     private boolean autoAimEnabled = false;
     private boolean lastToggleState = false;
 
-    private double kP = 2.2;
-    private double kD = 0.12;
+    private double kP = 0.05;
+    private double kD = 0.05;
+
 
     private double lastError = 0;
     private long lastTime = System.nanoTime();
@@ -66,10 +67,6 @@ public class AutoAim {
         lastToggleState = buttonPressed;
     }
 
-    public boolean isAutoAimEnabled() {
-        return autoAimEnabled;
-    }
-
     // Call this from TeleOp when using Pedro
     public void driveFieldRelativeAutoAim(
             double y,
@@ -105,19 +102,13 @@ public class AutoAim {
         double derivative = (error - lastError) / dt;
         lastError = error;
 
-        double turn = kP * error + kD * derivative;
-
-        return clamp(turn, -1, 1);
+        return kP * error + kD * derivative;
     }
 
     private double wrapAngle(double angle) {
         while (angle > Math.PI) angle -= 2 * Math.PI;
         while (angle < -Math.PI) angle += 2 * Math.PI;
         return angle;
-    }
-
-    private double clamp(double val, double min, double max) {
-        return Math.max(min, Math.min(max, val));
     }
 
     // ================= YOUR ORIGINAL DRIVE =================
