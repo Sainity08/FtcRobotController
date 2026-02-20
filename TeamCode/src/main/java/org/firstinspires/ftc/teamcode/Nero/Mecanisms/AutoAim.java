@@ -17,8 +17,8 @@ public class AutoAim {
     private boolean autoAimEnabled = false;
     private boolean lastToggleState = false;
 
-    private double kP = 0.05;
-    private double kD = 0.05;
+    private double kP = 0.025;
+    private double kD = 0.025;
 
 
     private double lastError = 0;
